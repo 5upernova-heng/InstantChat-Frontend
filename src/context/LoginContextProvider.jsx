@@ -1,17 +1,18 @@
 import {createContext, useState} from "react";
 import {toast} from "react-toastify";
-import {login} from "../api/loginApi";
 // import {getOneUserApi} from "../api/userApi";
 import PropTypes from "prop-types";
+import {useNavigate} from "react-router-dom";
 
 export const LoginContext = createContext(null);
 
 function LoginContextProvider({children, isLogin, setLogin}) {
     const emptyAccount = {username: "", userId: ""};
     const [loginAccount, setAccount] = useState(emptyAccount);
-    // const navigate = useNavigate();
+    const navigate = useNavigate();
     const tryLogin = async (account) => {
-        const {response} = await login(account);
+        // const {response} = await login(account);
+        const response = true;
         if (response) {
             const {username} = account;
             setAccount({
@@ -27,7 +28,7 @@ function LoginContextProvider({children, isLogin, setLogin}) {
             toast("登录成功", {
                 autoClose: 3000,
             });
-            // navigate("/chat");
+            navigate("/chat");
         } else {
             toast("登录失败，请检查用户名和密码是否正确");
         }
