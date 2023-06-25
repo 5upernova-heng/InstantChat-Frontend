@@ -8,12 +8,38 @@ const backgroundColors = [
 ]
 
 const avatarSize = {
-    "sm": "3.5rem",
-    "md": "4.5rem",
-    "lg": "5.5rem",
+    "sm": "3rem",
+    "md": "4rem",
+    "lg": "5rem",
+}
+
+const avatarFontSize = {
+    "sm": "1rem",
+    "md": "2rem",
+    "lg": "2.5rem",
+}
+
+const roleAlignStyle = {
+    "user": "justify-content-end",
+    "others": "justify-content-start",
+}
+
+const roleBackgroundStyle = {
+    "user": "bg-primary",
+    "others": "bg-white",
+}
+
+const textColorStyle = {
+    "user": "text-white",
+    "others": "text-black",
 }
 
 export default {
     backgroundColors,
-    avatarSize
+    avatarSize,
+    avatarFontSize,
+    // message
+    roleAlignStyle,
+    roleBackgroundStyle,
+    textColorStyle,
 }

@@ -1,8 +1,19 @@
 import TopBar from "../components/TopBar.jsx";
 import SideBar from "../components/SideBar.jsx";
 import MessageInput from "../components/MessageInput.jsx";
+import {useContext, useEffect} from "react";
+import {LoginContext} from "../context/LoginContextProvider.jsx";
+import {useNavigate} from "react-router-dom";
+import MessageContainer from "../components/MessageContainer.jsx";
 
 function Chat() {
+    const {isLogin} = useContext(LoginContext);
+    const navigate = useNavigate();
+    useEffect(() => {
+        if (!isLogin) {
+            navigate("/login");
+        }
+    }, [isLogin, navigate])
     return (
         <>
             <TopBar/>
@@ -16,7 +27,7 @@ function Chat() {
                         <div className="overflow-auto" style={{
                             height: "calc(100vh - 20rem)",
                         }}>
-                            <h2>聊天界面</h2>
+                            <MessageContainer/>
                         </div>
                         <MessageInput/>
                     </div>
