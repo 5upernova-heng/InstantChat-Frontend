@@ -5,7 +5,7 @@ function Login() {
         <div>
             <div className="card rounded-4 shadow-lg bg-light position-absolute top-50 start-50 translate-middle p-5">
                 <img
-                    src="/src/assets/bupt_logo.svg"
+                    src="/src/assets/logo.svg"
                     alt="Logo"
                     width="100"
                     height="100"

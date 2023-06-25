@@ -12,7 +12,7 @@ function TopBar() {
                         width: "5.5rem",
                         height: "5.5rem",
                     }}
-                    src="/src/assets/bupt_logo.svg"
+                    src="/src/assets/logo.svg"
                     alt="Logo"
                     className="d-inline-block"
                 />
