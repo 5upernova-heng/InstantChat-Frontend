@@ -13,7 +13,8 @@ function App() {
     const renderRoutes = () => {
         return <Routes>
             {rootPageRoute}
-            {isLogin ? <Route path={"/chat"} element={<Chat/>}/> : <Route path={"/login"} element={<Login/>}/>}
+            <Route path={"/chat"} element={<Chat/>}/>
+            <Route path={"/login"} element={<Login/>}/>
         </Routes>
     }
     return (<>

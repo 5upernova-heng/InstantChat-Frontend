@@ -3,7 +3,6 @@ import STYLE from "/src/style.js";
 import "/src/styles/Avatar.css"
 
 function Avatar({name, size, color, textColor}) {
-
     const hashCodeColor = (name) => {
         let hash = 0;
         for (let i = 0, len = name.length; i < len; i++) {
@@ -18,8 +17,11 @@ function Avatar({name, size, color, textColor}) {
             height: STYLE.avatarSize[size || "md"],
             width: STYLE.avatarSize[size || "md"]
         }}>
-            <p className="fw-bold fs-1 mb-0"
-               style={{color: textColor || "white"}}
+            <p className="fw-bold mb-0"
+               style={{
+                   color: textColor || "white",
+                   fontSize: size ? STYLE.avatarFontSize[size] : STYLE.avatarFontSize["md"]
+               }}
             >
                 {name[0]}
             </p>

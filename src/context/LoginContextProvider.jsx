@@ -1,29 +1,25 @@
 import {createContext, useState} from "react";
-import {toast} from "react-toastify";
-// import {getOneUserApi} from "../api/userApi";
 import PropTypes from "prop-types";
 import {useNavigate} from "react-router-dom";
+import {login} from "../api/loginApi.js";
+import {toast} from "react-toastify";
 
 export const LoginContext = createContext(null);
 
 function LoginContextProvider({children, isLogin, setLogin}) {
     const emptyAccount = {username: "", userId: ""};
     const [loginAccount, setAccount] = useState(emptyAccount);
+    const [token, setToken] = useState("");
     const navigate = useNavigate();
     const tryLogin = async (account) => {
-        // const {response} = await login(account);
-        const response = true;
-        if (response) {
+        const {code, data} = await login(account);
+        if (code) {
             const {username} = account;
+            setToken(data);
             setAccount({
                 username: username,
                 userId: username,
             });
-            // const {response} = await getOneUserApi(
-            //     username,
-            //     date.getTime(),
-            //     username
-            // );
             setLogin(true);
             toast("登录成功", {
                 autoClose: 3000,
@@ -40,6 +36,7 @@ function LoginContextProvider({children, isLogin, setLogin}) {
     return (
         <LoginContext.Provider
             value={{
+                token,
                 isLogin,
                 tryLogin,
                 quitLogin,
