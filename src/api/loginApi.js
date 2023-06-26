@@ -3,7 +3,7 @@ import {apiRoot} from "/src/config.json";
 
 export async function login(account) {
     const {username, password} = account;
-    console.log("API Called: login\n", account)
+    console.log("API Called: login\n", account);
     const {data} = await request.post(`${apiRoot}/login`, {
         username,
         password,
