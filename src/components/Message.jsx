@@ -4,7 +4,7 @@ import STYLE from "../style.js";
 function Message({message, role}) {
     return (
         <div className={`d-flex align-items-center ${STYLE.roleAlignStyle[role]}`}>
-            <div className={`p-2 mx-4 border rounded-3 ${STYLE.roleBackgroundStyle[role]}`}
+            <div className={`p-2 mx-4 rounded-3 shadow ${STYLE.roleBackgroundStyle[role]}`}
                  style={{maxWidth: "50%"}}>
                 <p className={`mb-0 ${STYLE.textColorStyle[role]}`}
                    style={{

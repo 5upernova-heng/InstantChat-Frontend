@@ -2,8 +2,7 @@ import Message from "./Message.jsx";
 
 function MessageContainer() {
     return (
-        <div className="d-flex flex-column gap-3">
-            <h2>聊天界面</h2>
+        <div className="d-flex flex-column gap-3 pt-3">
             <Message message={"其他人的消息"} role={"others"}/>
             <Message
                 message={"很长很长很长很长很长很长很长很长很长很长很长很长很长很长很长很长很长很长很长很长很长很长很长很长的消息"}
