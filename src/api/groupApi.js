@@ -21,7 +21,7 @@ export async function listGroups(token) {
     const {data} = await request.get(`${apiRoot}/group/list`, {
         headers: {
             token: token,
-        }
+        },
     });
     console.log("Result of listGroups: ", data);
     return data;

@@ -31,6 +31,7 @@ function LoginContextProvider({children, isLogin, setLogin}) {
     };
     const quitLogin = () => {
         setLogin(false);
+        setToken("");
         setAccount(emptyAccount);
     };
     return (
