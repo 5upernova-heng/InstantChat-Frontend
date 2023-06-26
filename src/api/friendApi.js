@@ -48,7 +48,7 @@ export async function listFriends(token) {
         headers: {
             token: token,
         }
-    }) ;
+    });
     console.log("Result of listFriends: ", data);
     return data;
 }
@@ -69,13 +69,13 @@ export async function friendDelete(friend, token) {
 }
 
 export async function listAllUsers(token) {
-    console.log("API Called: listAllUsers\n");
-    const {data} = await request.post(`${apiRoot}/friend/listall`, {
+    console.log("API Called: listAllUsers\n", token);
+    const {data} = await request.get(`${apiRoot}/friend/listall`, {
         headers: {
-            token: token,
+            token: token
         }
     });
-    console.log("Result of listAllUsers: ", token);
-    return data; 
+    console.log("Result of listAllUsers: ", data);
+    return data;
 }
 

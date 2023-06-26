@@ -68,7 +68,7 @@ export async function leaveGroup(groupId, id, token) {
 }
 
 export async function listAllGroups(token) {
-    console.log("API Called: listAllGroups\n");
+    console.log("API Called: listAllGroups\n", token);
     const {data} = await request.get(`${apiRoot}/group/listall`, {
         headers: {
             token: token,

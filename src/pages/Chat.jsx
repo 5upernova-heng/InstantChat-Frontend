@@ -6,6 +6,9 @@ import {LoginContext} from "../context/LoginContextProvider.jsx";
 import {useNavigate} from "react-router-dom";
 import MessageContainer from "../components/MessageContainer.jsx";
 import RightBar from "../components/RightBar.jsx";
+import Modal from "../components/Modal.jsx";
+import AddConversation from "../components/AddConversation.jsx";
+
 
 function Chat() {
     const {isLogin} = useContext(LoginContext);
@@ -37,6 +40,17 @@ function Chat() {
                     </div>
                 </div>
             </div>
+            <Modal id={"addConversation"}
+                   headerLabel={"添加好友 / 群聊"}
+                   bodyComponent={
+                       <AddConversation/>
+                   }
+                   footerComponent={
+                       <button className="btn btn-secondary"
+                               data-bs-dismiss="modal"
+                       >取消</button>
+                   }
+            />
         </>
     )
 }
