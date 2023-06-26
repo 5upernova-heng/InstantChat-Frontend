@@ -14,7 +14,7 @@ const avatarSize = {
 }
 
 const avatarFontSize = {
-    "sm": "1rem",
+    "sm": "1.5rem",
     "md": "2rem",
     "lg": "2.5rem",
 }

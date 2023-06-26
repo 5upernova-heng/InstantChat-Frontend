@@ -5,6 +5,7 @@ import {useContext, useEffect} from "react";
 import {LoginContext} from "../context/LoginContextProvider.jsx";
 import {useNavigate} from "react-router-dom";
 import MessageContainer from "../components/MessageContainer.jsx";
+import RightBar from "../components/RightBar.jsx";
 
 function Chat() {
     const {isLogin} = useContext(LoginContext);
@@ -32,7 +33,7 @@ function Chat() {
                         <MessageInput/>
                     </div>
                     <div className="col-2 border-start">
-                        <h2>好友信息 / 群聊成员</h2>
+                        <RightBar/>
                     </div>
                 </div>
             </div>
