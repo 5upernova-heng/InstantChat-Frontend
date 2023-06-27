@@ -2,7 +2,7 @@ import {createContext, useContext, useEffect, useState} from "react";
 import PropTypes from "prop-types";
 import {listAllUsers, listFriends} from "../api/friendApi.js";
 import {LoginContext} from "./LoginContextProvider.jsx";
-import {creatGroup, listAllGroups, listGroups} from "../api/groupApi.js";
+import {creatGroup, getMembers, listAllGroups, listGroups} from "../api/groupApi.js";
 import {toast} from "react-toastify";
 import {friendHistoryMessage, groupHistoryMessage} from "../api/messageApi.js";
 
@@ -124,13 +124,28 @@ function ChatContextProvider({children}) {
     }
 
     const findUserById = (id) => {
-        return allUsers.find((user) => user.id === id);
+        console.log(id);
+        console.log(allUsers);
+        const result = allUsers.find((user) => user.id === id);
+        console.log(result);
+        return result;
     }
 
     const findGroupById = (id) => {
-        return allGroups.find((group) => group.id === id)
+        console.log(id);
+        console.log(allGroups);
+        const result = allGroups.find((group) => group.id === id);
+        console.log(result);
+        return result;
     }
 
+    const findMembersById = async (id) => {
+        console.log(id);
+        const {code, msg, data} = await getMembers(id, token);
+        console.log(data);
+        if(code)
+            return data;
+    }
 
     return <ChatContext.Provider
         value={{
@@ -142,6 +157,7 @@ function ChatContextProvider({children}) {
             messages,
             findUserById,
             findGroupById,
+            findMembersById,
             // submit
             newGroup,
             changeSubmitGroup,
