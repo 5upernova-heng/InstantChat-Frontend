@@ -5,14 +5,14 @@ import {LoginContext} from "../context/LoginContextProvider.jsx";
 
 function MessageContainer() {
     const {loginAccount} = useContext(LoginContext)
-    const {allUsers, messages} = useContext(ChatContext);
+    const {findUserById, messages} = useContext(ChatContext);
 
     const renderMessages = () => {
         return messages.map((message, index) => {
-            const {id1, messageText} = message
+            const {id1, messageText, messageTime} = message
             const role = id1 === loginAccount.id ? "user" : "other"
-            const user = allUsers.findUserById(id1);
-            return <Message key={index} role={role} message={messageText} user={user}/>
+            const user = findUserById(id1);
+            return <Message key={index} role={role} time={messageTime} message={messageText} user={user}/>
         })
     }
     return (
