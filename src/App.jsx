@@ -5,6 +5,7 @@ import Chat from "./pages/Chat.jsx";
 import Login from "./pages/Login.jsx";
 import LoginContextProvider from "./context/LoginContextProvider.jsx";
 import Register from "./pages/Register.jsx";
+import ChatContextProvider from "./context/ChatContextProvider.jsx";
 
 
 function App() {
@@ -22,7 +23,9 @@ function App() {
     return (<>
         <div className="background"></div>
         <LoginContextProvider isLogin={isLogin} setLogin={setLogin}>
-            {renderRoutes()}
+            <ChatContextProvider>
+                {renderRoutes()}
+            </ChatContextProvider>
         </LoginContextProvider>
     </>)
 }

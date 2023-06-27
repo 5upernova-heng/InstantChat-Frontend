@@ -18,6 +18,7 @@ function Chat() {
             navigate("/login");
         }
     }, [isLogin, navigate])
+
     return (
         <>
             <TopBar/>

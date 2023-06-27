@@ -19,6 +19,10 @@ function AddConversation() {
         }
     }, [isLogin])
 
+    /*
+    1. 排除自己
+    2. 排除已经是好友的人
+     */
     const loadUsers = async () => {
         const {code, data} = await listAllUsers(token);
         if (code === 1) setUsers(data);
