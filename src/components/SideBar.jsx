@@ -17,6 +17,7 @@ function SideBar() {
         groups.map((group) => newChats.push(
             {id: group.id, name: group.name}
         ))
+        setChats(newChats);
     }, [friends, groups])
 
     const renderSideAvatars = () => {

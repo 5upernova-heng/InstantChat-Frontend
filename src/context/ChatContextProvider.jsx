@@ -36,7 +36,7 @@ function ChatContextProvider({children}) {
             loadFriends();
             loadGroups();
         }
-    }, [isLogin, loadFriends, loadGroups, token])
+    }, [isLogin])
 
     return <ChatContext.Provider
         value={{
