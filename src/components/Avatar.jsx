@@ -12,7 +12,7 @@ function Avatar({name, size, color, textColor}) {
         return STYLE.backgroundColors[index];
     }
     return (
-        <div className="avatar d-flex justify-content-center align-items-center" style={{
+        <div className="avatar d-flex justify-content-center align-items-center shadow" style={{
             backgroundColor: `${color || hashCodeColor(name)}`,
             height: STYLE.avatarSize[size || "md"],
             width: STYLE.avatarSize[size || "md"]
@@ -34,6 +34,7 @@ Avatar.propTypes = {
     size: PropTypes.string,
     color: PropTypes.string,
     textColor: PropTypes.string,
+    shadow: PropTypes.bool,
 }
 
 export default Avatar;

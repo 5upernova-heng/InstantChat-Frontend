@@ -5,7 +5,6 @@
 }
 
 .avatar:hover {
-    box-shadow: 0 0.5rem 1rem rgba(0, 0, 0, 0.15);
     border-radius: 20%;
     transition: 250ms;
 }
