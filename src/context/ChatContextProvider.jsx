@@ -119,6 +119,10 @@ function ChatContextProvider({children}) {
         }
     }
 
+    const findUserById = (id) => {
+        return allUsers.find((user) => user.id === id);
+    }
+
 
     return <ChatContext.Provider
         value={{
@@ -128,10 +132,16 @@ function ChatContextProvider({children}) {
             allUsers,
             allGroups,
             messages,
+            findUserById,
             // submit
             newGroup,
             changeSubmitGroup,
             submitNewGroup,
+            // conversation
+            mode,
+            setMode,
+            conversation,
+            setConversation,
         }}>
         {children}
     </ChatContext.Provider>
