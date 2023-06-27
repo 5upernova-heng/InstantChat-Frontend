@@ -1,36 +1,58 @@
+import PropTypes from "prop-types";
 import {useContext, useEffect, useState} from "react";
 import UserCard from "./UserCard.jsx";
 import List from "./List.jsx";
-import {listAllUsers} from "../api/friendApi.js";
+import {friendRequest} from "../api/friendApi.js";
 import {LoginContext} from "../context/LoginContextProvider.jsx";
-import {listAllGroups} from "../api/groupApi.js";
+import {ChatContext} from "../context/ChatContextProvider.jsx";
+import {toast} from "react-toastify";
+import CreateGroupForm from "./CreateGroupForm.jsx";
 
-function AddConversation() {
-    const [tab, setTab] = useState(0);
+function AddConversation({tab, setTab}) {
     const [users, setUsers] = useState([]);
     const [groups, setGroups] = useState([]);
-    const {token, isLogin} = useContext(LoginContext);
-    const tabs = ["添加好友", "添加群聊"];
+
+    const {token, isLogin, loginAccount} = useContext(LoginContext);
+    const {friends, groups: addedGroups, allUsers, allGroups} = useContext(ChatContext);
+
+    const tabs = ["添加好友", "添加群聊", "创建群聊"];
 
     useEffect(() => {
         if (isLogin) {
-            loadUsers();
-            loadGroups();
+            loadUsers(allUsers);
+            loadGroups(allGroups);
         }
-    }, [isLogin])
+    }, [isLogin, allUsers, allGroups])
 
     /*
     1. 排除自己
     2. 排除已经是好友的人
      */
-    const loadUsers = async () => {
-        const {code, data} = await listAllUsers(token);
-        if (code === 1) setUsers(data);
+    const loadUsers = (data) => {
+        const filteredUsers = [...data];
+        const index = filteredUsers.findIndex((user) => {
+            return user.id === loginAccount.id
+        });
+        filteredUsers.splice(index, 1);
+        friends.map((friend) => {
+            const index = users.findIndex((user) => user.id === friend.id);
+            filteredUsers.splice(index, 1);
+        })
+        setUsers(filteredUsers);
     }
 
-    const loadGroups = async () => {
-        const {code, data} = await listAllGroups(token);
-        if (code === 1) setGroups(data);
+    const loadGroups = (data) => {
+        const filteredGroups = [...data];
+        addedGroups.map((addedGroup) => {
+            const index = groups.findIndex((group) => group.id === addedGroup.id);
+            filteredGroups.splice(index, 1);
+        })
+        setGroups(filteredGroups);
+    }
+
+    const addFriend = async (id) => {
+        const {code} = await friendRequest(id, token);
+        if (code) toast("请求发送成功");
     }
 
     const renderTabs = () => {
@@ -57,7 +79,11 @@ function AddConversation() {
     const renderUser = (user, index) => (
         <div key={index} className="px-3 d-flex align-items-center">
             <UserCard name={user.name}/>
-            <button className="btn btn-sm btn-primary">
+            <button className="btn btn-sm btn-primary"
+                    onClick={() => {
+                        addFriend(user.id);
+                    }}
+            >
                 发送请求
             </button>
         </div>)
@@ -78,11 +104,17 @@ function AddConversation() {
     return (
         <div>
             {renderTabs()}
-            <div className="border">
-                <List renderMethod={renderMethod[tab]} data={data[tab]} title={titles[tab]}/>
+            <div className={tab < 2 ? "border" : "border-top"}>
+                {tab < 2 ? <List renderMethod={renderMethod[tab]} data={data[tab]} title={titles[tab]}/>
+                    : <CreateGroupForm/>}
             </div>
         </div>
     )
+}
+
+AddConversation.propTypes = {
+    tab: PropTypes.number.isRequired,
+    setTab: PropTypes.func.isRequired,
 }
 
 export default AddConversation;

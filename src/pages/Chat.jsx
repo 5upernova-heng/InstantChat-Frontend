@@ -1,7 +1,7 @@
 import TopBar from "../components/TopBar.jsx";
 import SideBar from "../components/SideBar.jsx";
 import MessageInput from "../components/MessageInput.jsx";
-import {useContext, useEffect} from "react";
+import {useContext, useEffect, useState} from "react";
 import {LoginContext} from "../context/LoginContextProvider.jsx";
 import {useNavigate} from "react-router-dom";
 import MessageContainer from "../components/MessageContainer.jsx";
@@ -11,7 +11,10 @@ import AddConversation from "../components/AddConversation.jsx";
 
 
 function Chat() {
+    const [tab, setTab] = useState(0);
+
     const {isLogin} = useContext(LoginContext);
+
     const navigate = useNavigate();
     useEffect(() => {
         if (!isLogin) {
@@ -44,12 +47,16 @@ function Chat() {
             <Modal id={"addConversation"}
                    headerLabel={"添加好友 / 群聊"}
                    bodyComponent={
-                       <AddConversation/>
+                       <AddConversation tab={tab} setTab={setTab}/>
                    }
                    footerComponent={
-                       <button className="btn btn-secondary"
-                               data-bs-dismiss="modal"
-                       >取消</button>
+                       <>
+                           {tab < 2 || <button className="btn btn-success">添加</button>}
+                           <button className="btn btn-secondary"
+                                   data-bs-dismiss="modal"
+                           >取消
+                           </button>
+                       </>
                    }
             />
         </>
