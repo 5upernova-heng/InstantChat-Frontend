@@ -25,6 +25,9 @@ function ChatContextProvider({children}) {
     // conversation
     // which conversation should show on the page
     // Its value equals to the id of the user/group
+    /*
+    Always set mode before conversation.
+     */
     const [conversation, setConversation] = useState(-1);
     // 0: single user; 1. group
     const [mode, setMode] = useState(0);
@@ -120,7 +123,19 @@ function ChatContextProvider({children}) {
     }
 
     const findUserById = (id) => {
-        return allUsers.find((user) => user.id === id);
+        console.log(id);
+        console.log(allUsers);
+        const result = allUsers.find((user) => user.id === id);
+        console.log(result);
+        return result;
+    }
+
+    const findGroupById = (id) => {
+        console.log(id);
+        console.log(allGroups);
+        const result = allGroups.find((group) => group.id === id);
+        console.log(result);
+        return result
     }
 
 
@@ -133,6 +148,7 @@ function ChatContextProvider({children}) {
             allGroups,
             messages,
             findUserById,
+            findGroupById,
             // submit
             newGroup,
             changeSubmitGroup,

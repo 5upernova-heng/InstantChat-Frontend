@@ -6,16 +6,18 @@ import {ChatContext} from "../context/ChatContextProvider.jsx";
 function SideBar() {
     Modal;
 
-    const {friends, groups} = useContext(ChatContext);
+    const {friends, groups, setConversation, setMode} = useContext(ChatContext);
     const [chats, setChats] = useState([]);
 
     useEffect(() => {
+        // type 0 for user; 1 for group
+        // the same as mode in ChatContext
         const newChats = []
         friends.map((friend) => newChats.push(
-            {id: friend.id, name: friend.name}
+            {id: friend.id, type: 0, name: friend.name}
         ))
         groups.map((group) => newChats.push(
-            {id: group.id, name: group.name}
+            {id: group.id, type: 1, name: group.name}
         ))
         setChats(newChats);
     }, [friends, groups])
@@ -23,7 +25,9 @@ function SideBar() {
     const renderSideAvatars = () => {
         return chats.map((chat, index) =>
             <div key={index} onClick={() => {
-                console.log(chat.id);
+                // always set mode before conversation
+                setMode(chat.type);
+                setConversation(chat.id);
             }}>
                 <Avatar name={chat.name}/>
             </div>
