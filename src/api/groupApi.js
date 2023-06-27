@@ -44,7 +44,7 @@ export async function addMember(groupId, members, token) {
 export async function getMembers(groupId, token) {
     console.log("API Called: getMembers\n", groupId);
     const {data} = await request.get(`${apiRoot}/group/members`, {
-        params: groupId,
+        params: {groupId},
         headers: {
             token: token,
         }
