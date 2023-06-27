@@ -4,9 +4,11 @@
 import { useContext, useEffect, useState } from "react";
 import UserCard from "./UserCard.jsx";
 import { ChatContext } from "../context/ChatContextProvider.jsx";
+import { LoginContext } from "../context/LoginContextProvider.jsx";
 
 function RightBar() {
-  const { mode, conversation, findMembersById } = useContext(ChatContext);
+  const { mode, conversation, findMembersById, setConversation, chats, setChats, setMode } = useContext(ChatContext);
+  const { loginAccount } = useContext(LoginContext);
   const [members, setMembers] = useState([]);
 
   const loadMember = async () => {
@@ -35,6 +37,28 @@ function RightBar() {
       name: "test2000",
     },
   ];
+
+  const jumpToChat = (user) => {
+    if(user.id === loginAccount.id)
+        return ;
+    
+    setMode(0);
+    let flag = 0;
+    chats.map((chat) => {
+        if(chat.id === user.id) {
+            setConversation(chat.id);
+            flag = 1;
+            return ;
+        }
+    });
+    if(flag === 0) {
+        const newChats = chats;
+        newChats.push({id: user.id, type: 0, name: user.name});
+        setChats(newChats);
+        setConversation(user.id);
+    }
+  }
+
   const renderFriendRequest = () => {
     return (
       <>
@@ -66,7 +90,9 @@ function RightBar() {
         <h4 className="fw-bold text-center pt-2">成员列表</h4>
         <div className="d-flex flex-column gap-3">
           {members.map((user, index) => (
-            <div key={index} className="px-2 d-flex align-items-center">
+            <div key={index} className="px-2 d-flex align-items-center" onClick = {() => {
+                jumpToChat(user);
+            }}>
               <UserCard name={user.name} />
             </div>
           ))}
