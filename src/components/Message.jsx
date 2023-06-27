@@ -1,14 +1,18 @@
 import PropTypes from "prop-types";
 import STYLE from "../style.js";
 import Avatar from "./Avatar.jsx";
+import Time from "./Time.jsx";
 
-function Message({message, user, role}) {
+function Message({message, time, user, role}) {
     return (
         <div className={`d-flex align-items-start justify-content-start ${STYLE.messageAlignStyle[role]} mx-3 gap-3`}>
             <Avatar name={user.name}/>
             <div
                 className={`d-flex flex-column flex-grow-1 ${role === "user" ? "align-items-end" : "align-items-start"} `}>
-                <h5 className="fw-bold">{user.name}</h5>
+                <div className={`d-flex align-items-center ${STYLE.messageAlignStyle[role]} gap-3`}>
+                    <h5 className="fw-bold">{user.name}</h5>
+                    <Time timeStr={time}/>
+                </div>
                 <div
                     className={`rounded-3 shadow ${STYLE.roleBackgroundStyle[role]}`}
                     style={{
@@ -29,6 +33,7 @@ function Message({message, user, role}) {
 Message.propTypes = {
     message: PropTypes.string.isRequired,
     user: PropTypes.object.isRequired,
+    time: PropTypes.string.isRequired,
     // user, others
     role: PropTypes.string.isRequired,
 }

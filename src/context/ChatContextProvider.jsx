@@ -62,16 +62,17 @@ function ChatContextProvider({children}) {
         if (conversation === -1) return;
         if (mode === 0) {
             // user
-            const {code, data, msg} = friendHistoryMessage(conversation, token);
+            const {code, data, msg} = await friendHistoryMessage(conversation, token);
             if (code) {
                 setMessages(data['messageList']);
+                toast(msg);
             } else {
                 toast(msg);
             }
         }
         if (mode === 1) {
             // group
-            const {code, data, msg} = groupHistoryMessage(conversation, token);
+            const {code, data, msg} = await groupHistoryMessage(conversation, token);
             if (code) {
                 setMessages(data['messageList']);
             } else {
@@ -123,19 +124,11 @@ function ChatContextProvider({children}) {
     }
 
     const findUserById = (id) => {
-        console.log(id);
-        console.log(allUsers);
-        const result = allUsers.find((user) => user.id === id);
-        console.log(result);
-        return result;
+        return allUsers.find((user) => user.id === id);
     }
 
     const findGroupById = (id) => {
-        console.log(id);
-        console.log(allGroups);
-        const result = allGroups.find((group) => group.id === id);
-        console.log(result);
-        return result
+        return allGroups.find((group) => group.id === id)
     }
 
 

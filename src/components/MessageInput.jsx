@@ -1,6 +1,5 @@
 import "/src/styles/MessageInput.css"
 import PropTypes from "prop-types";
-import Message from "./Message.jsx";
 
 function MessageInput({disabled}) {
     return (
@@ -17,7 +16,7 @@ function MessageInput({disabled}) {
     )
 }
 
-Message.propTypes = {
+MessageInput.propTypes = {
     disabled: PropTypes.bool,
 }
 
