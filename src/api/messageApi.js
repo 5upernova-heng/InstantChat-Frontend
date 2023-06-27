@@ -20,7 +20,9 @@ export async function sendMessage(friend, message, token) {
 export async function friendHistoryMessage(friendId, token) {
     console.log("API Called: friendHistoryMessage\n", friendId);
     const {data} = await request.get(`${apiRoot}/friend/historymsg`, {
-        params: friendId,
+        params: {
+            friendId
+        },
         headers: {
             token: token,
         }
@@ -47,7 +49,9 @@ export async function sendGroupMessage(id, groupId, message, token) {
 export async function groupHistoryMessage(groupId, token) {
     console.log("API Called: groupHistoryMessage\n", groupId);
     const {data} = await request.get(`${apiRoot}/group/historymsg`, {
-        params: groupId,
+        params: {
+            groupId
+        },
         headers: {
             token: token,
         }

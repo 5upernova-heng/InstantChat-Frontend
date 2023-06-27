@@ -16,9 +16,14 @@ function Chat() {
     const [tab, setTab] = useState(0);
 
     const {isLogin} = useContext(LoginContext);
-    const {submitNewGroup} = useContext(ChatContext);
+    const {submitNewGroup, conversation, mode, findUserById, findGroupById} = useContext(ChatContext);
 
     const navigate = useNavigate();
+    const title = conversation === -1
+        ? "选择一个对话以开始聊天"
+        : (mode ? findGroupById(conversation).name
+                : findUserById(conversation).name
+        );
     useEffect(() => {
         if (!isLogin) {
             navigate("/login");
@@ -33,14 +38,14 @@ function Chat() {
                 <div className="d-flex w-100">
                     <div className="col">
                         <div className="border-bottom d-flex align-items-center" style={{height: "3.5rem"}}>
-                            <h2 className="mb-0">「聊天标题」</h2>
+                            <h2 className="mb-0">{`「${title}」`}</h2>
                         </div>
                         <div className="overflow-auto" style={{
                             height: "calc(100vh - 20rem)",
                         }}>
                             <MessageContainer/>
                         </div>
-                        <MessageInput/>
+                        <MessageInput disabled={conversation === -1}/>
                     </div>
                     <div className="col-2 border-start">
                         <RightBar/>

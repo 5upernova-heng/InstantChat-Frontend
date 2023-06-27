@@ -25,6 +25,9 @@ function ChatContextProvider({children}) {
     // conversation
     // which conversation should show on the page
     // Its value equals to the id of the user/group
+    /*
+    Always set mode before conversation.
+     */
     const [conversation, setConversation] = useState(-1);
     // 0: single user; 1. group
     const [mode, setMode] = useState(0);
@@ -59,16 +62,17 @@ function ChatContextProvider({children}) {
         if (conversation === -1) return;
         if (mode === 0) {
             // user
-            const {code, data, msg} = friendHistoryMessage(conversation, token);
+            const {code, data, msg} = await friendHistoryMessage(conversation, token);
             if (code) {
                 setMessages(data['messageList']);
+                toast(msg);
             } else {
                 toast(msg);
             }
         }
         if (mode === 1) {
             // group
-            const {code, data, msg} = groupHistoryMessage(conversation, token);
+            const {code, data, msg} = await groupHistoryMessage(conversation, token);
             if (code) {
                 setMessages(data['messageList']);
             } else {
@@ -158,6 +162,11 @@ function ChatContextProvider({children}) {
             newGroup,
             changeSubmitGroup,
             submitNewGroup,
+            // conversation
+            mode,
+            setMode,
+            conversation,
+            setConversation,
         }}>
         {children}
     </ChatContext.Provider>
