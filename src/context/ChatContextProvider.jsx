@@ -21,6 +21,7 @@ function ChatContextProvider({children}) {
     const [allUsers, setAllUsers] = useState([]);
     const [allGroups, setAllGroups] = useState([]);
     const [messages, setMessages] = useState([]);
+    const [chats, setChats] = useState([]);
 
     // conversation
     // which conversation should show on the page
@@ -163,6 +164,8 @@ function ChatContextProvider({children}) {
             setMode,
             conversation,
             setConversation,
+            chats,
+            setChats,
         }}>
         {children}
     </ChatContext.Provider>

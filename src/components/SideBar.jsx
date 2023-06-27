@@ -6,8 +6,8 @@ import {ChatContext} from "../context/ChatContextProvider.jsx";
 function SideBar() {
     Modal;
 
-    const {friends, groups, setConversation, setMode} = useContext(ChatContext);
-    const [chats, setChats] = useState([]);
+    const {friends, groups, setConversation, setMode, chats, setChats} = useContext(ChatContext);
+    
 
     useEffect(() => {
         // type 0 for user; 1 for group
