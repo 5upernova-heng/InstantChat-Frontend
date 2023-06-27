@@ -1,28 +1,32 @@
 import Joi from "joi";
-import {useContext, useState} from "react";
+import {useState} from "react";
 
-import Input from "./Input";
-import {LoginContext} from "/src/context/LoginContextProvider";
+import Input from "/src/components/Input";
+import {register} from "/src/api/registerApi.js";
+import {toast} from "react-toastify";
+import {useNavigate} from "react-router-dom";
 
-function LoginFormGroup() {
-    const [account, setAccount] = useState({username: "", password: ""});
+function RegisterFormGroup() {
+    const [form, setForm] = useState({username: "", name: "", password: "", passwordConfirm: ""});
     const [errors, setErrors] = useState({});
-    const {tryLogin} = useContext(LoginContext);
     const schema = Joi.object({
         username: Joi.string().min(3).max(20).required(),
+        name: Joi.string().min(3).max(20).required(),
         password: Joi.string()
             .pattern(new RegExp("^[a-zA-Z0-9]{3,30}$"))
             .required(),
+        passwordConfirm: Joi.any().valid(Joi.ref('password')).required(),
     });
+    const navigate = useNavigate();
 
     const handleChange = ({target: input}) => {
         const {value, name} = input;
-        account[name] = value;
-        setAccount(account);
+        form[name] = value;
+        setForm(form);
     };
 
-    const handleSubmit = () => {
-        const {error} = schema.validate(account, {abortEarly: false});
+    const handleSubmit = async () => {
+        const {error} = schema.validate(form, {abortEarly: false});
         const newErrors = error
             ? error.details.reduce((allErrors, error) => {
                 allErrors[error.path[0]] = error.message;
@@ -31,7 +35,13 @@ function LoginFormGroup() {
             : {};
         setErrors(newErrors);
         if (error) return;
-        tryLogin(account);
+        const {code} = await register(form);
+        if (code === 1) {
+            toast("注册成功");
+            navigate("/login");
+        } else {
+            toast("注册失败");
+        }
     };
     return (
         <div style={{minWidth: "400px"}}>
@@ -44,6 +54,14 @@ function LoginFormGroup() {
             />
             <div className="py-4"></div>
             <Input
+                name="name"
+                icon={<i className="fa fa-lock" aria-hidden="true"></i>}
+                label="昵称"
+                error={errors.name}
+                onChange={handleChange}
+            />
+            <div className="py-4"></div>
+            <Input
                 name="password"
                 icon={<i className="fa fa-lock" aria-hidden="true"></i>}
                 label="密码"
@@ -51,9 +69,18 @@ function LoginFormGroup() {
                 error={errors.password}
                 onChange={handleChange}
             />
+            <div className="py-4"></div>
+            <Input
+                name="passwordConfirm"
+                icon={<i className="fa fa-lock" aria-hidden="true"></i>}
+                label="确认密码"
+                type="password"
+                error={errors.passwordConfirm}
+                onChange={handleChange}
+            />
             <div className="mt-5 d-flex justify-content-evenly align-items-center">
                 <button
-                    className="btn btn-primary shadow"
+                    className="btn btn-success shadow"
                     onClick={() => handleSubmit()}
                     onKeyDown={(e) => {
                         if (e.key === "enter") {
@@ -61,13 +88,13 @@ function LoginFormGroup() {
                         }
                     }}
                 >
-                    登录
+                    注册
                 </button>
             </div>
         </div>
     );
 }
 
-LoginFormGroup.propTypes = {};
+RegisterFormGroup.propTypes = {};
 
-export default LoginFormGroup;
+export default RegisterFormGroup;

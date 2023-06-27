@@ -7,22 +7,24 @@ import {toast} from "react-toastify";
 export const LoginContext = createContext(null);
 
 function LoginContextProvider({children, isLogin, setLogin}) {
-    const emptyAccount = {username: "", userId: ""};
+    const emptyAccount = {username: "", name: "", id: ""};
     const [loginAccount, setAccount] = useState(emptyAccount);
     const [token, setToken] = useState("");
     const navigate = useNavigate();
+
     const tryLogin = async (account) => {
         const {code, data} = await login(account);
         if (code) {
-            const {username} = account;
-            setToken(data);
+            const {jwt, user} = data;
+            setToken(jwt);
             setAccount({
-                username: username,
-                userId: username,
+                username: user.username,
+                name: user.name,
+                id: user.id,
             });
             setLogin(true);
-            toast("登录成功", {
-                autoClose: 3000,
+            toast(`登录成功。您好，${user.name}!`, {
+                autoClose: 1000,
             });
             navigate("/chat");
         } else {
@@ -31,6 +33,7 @@ function LoginContextProvider({children, isLogin, setLogin}) {
     };
     const quitLogin = () => {
         setLogin(false);
+        setToken("");
         setAccount(emptyAccount);
     };
     return (

@@ -4,6 +4,8 @@ import {Navigate, Route, Routes} from "react-router-dom";
 import Chat from "./pages/Chat.jsx";
 import Login from "./pages/Login.jsx";
 import LoginContextProvider from "./context/LoginContextProvider.jsx";
+import Register from "./pages/Register.jsx";
+import ChatContextProvider from "./context/ChatContextProvider.jsx";
 
 
 function App() {
@@ -15,12 +17,15 @@ function App() {
             {rootPageRoute}
             <Route path={"/chat"} element={<Chat/>}/>
             <Route path={"/login"} element={<Login/>}/>
+            <Route path={"/register"} element={<Register/>}/>
         </Routes>
     }
     return (<>
         <div className="background"></div>
         <LoginContextProvider isLogin={isLogin} setLogin={setLogin}>
-            {renderRoutes()}
+            <ChatContextProvider>
+                {renderRoutes()}
+            </ChatContextProvider>
         </LoginContextProvider>
     </>)
 }

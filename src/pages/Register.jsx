@@ -1,7 +1,7 @@
-import LoginFormGroup from "/src/components/LoginFormGroup.jsx";
+import RegisterFormGroup from "../components/RegisterFormGroup.jsx";
 import {Link} from "react-router-dom";
 
-function Login() {
+function Register() {
     return (
         <div>
             <div className="card rounded-4 shadow-lg bg-light position-absolute top-50 start-50 translate-middle p-5">
@@ -14,17 +14,12 @@ function Login() {
                 />
                 <h3 className="text-center fw-bold mb-4">即时聊天系统</h3>
                 <div className="p-4"/>
-                <LoginFormGroup/>
-                <div className="pt-4">
-                    <Link to={"/register"}>
-                        <p className="text-center mb-0">
-                            注册
-                        </p>
-                    </Link>
-                </div>
+                <RegisterFormGroup/>
+                <Link to={"/login"}>登录</Link>
             </div>
         </div>
     )
+
 }
 
-export default Login;
+export default Register;

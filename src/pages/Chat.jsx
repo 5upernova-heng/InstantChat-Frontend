@@ -1,19 +1,30 @@
 import TopBar from "../components/TopBar.jsx";
 import SideBar from "../components/SideBar.jsx";
 import MessageInput from "../components/MessageInput.jsx";
-import {useContext, useEffect} from "react";
+import {useContext, useEffect, useState} from "react";
 import {LoginContext} from "../context/LoginContextProvider.jsx";
 import {useNavigate} from "react-router-dom";
 import MessageContainer from "../components/MessageContainer.jsx";
+import RightBar from "../components/RightBar.jsx";
+import Modal from "../components/Modal.jsx";
+import AddConversation from "../components/AddConversation.jsx";
+import {ChatContext} from "../context/ChatContextProvider.jsx";
+
 
 function Chat() {
+    // which tab is modal in
+    const [tab, setTab] = useState(0);
+
     const {isLogin} = useContext(LoginContext);
+    const {submitNewGroup} = useContext(ChatContext);
+
     const navigate = useNavigate();
     useEffect(() => {
         if (!isLogin) {
             navigate("/login");
         }
     }, [isLogin, navigate])
+
     return (
         <>
             <TopBar/>
@@ -32,10 +43,28 @@ function Chat() {
                         <MessageInput/>
                     </div>
                     <div className="col-2 border-start">
-                        <h2>好友信息 / 群聊成员</h2>
+                        <RightBar/>
                     </div>
                 </div>
             </div>
+            <Modal id={"addConversation"}
+                   headerLabel={"添加好友 / 群聊"}
+                   bodyComponent={
+                       <AddConversation tab={tab} setTab={setTab}/>
+                   }
+                   footerComponent={
+                       <>
+                           {tab < 2 ||
+                               <button className="btn btn-success"
+                                       data-bs-dismiss="modal"
+                                       onClick={submitNewGroup}
+                               >添加</button>
+                           }
+                           <button className="btn btn-secondary" data-bs-dismiss="modal">取消
+                           </button>
+                       </>
+                   }
+            />
         </>
     )
 }
