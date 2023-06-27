@@ -57,7 +57,31 @@ export async function groupHistoryMessage(groupId, token) {
     return data;
 }
 
-export async function newFriendMessages(timeStr, token) {
-    console.log("API Called: newFriendMessages", timeStr);
-    const {data} = await request.get(`${apiRoot}/friend/`)
+export async function newFriendMessages(time, token) {
+    console.log("API Called: newFriendMessages", time);
+    const {data} = await request.get(`${apiRoot}/friend/newMessage`, {
+        params: {
+            time,
+        },
+        headers: {
+            token: token,
+        }
+    });
+    console.log("Result of newFriendMessages:", data);
+    return data;
+
+}
+
+export async function newGroupMessages(time, token) {
+    console.log("API Called: newGroupMessages", time);
+    const {data} = await request.get(`${apiRoot}/group/newMessage`, {
+        params: {
+            time,
+        },
+        headers: {
+            token: token,
+        }
+    });
+    console.log("Result of newGroupMessages:", data);
+    return data;
 }
