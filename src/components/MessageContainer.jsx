@@ -42,7 +42,7 @@ function MessageContainer() {
         })
     }
     return (
-        <div className="d-flex flex-column gap-3 pt-3">
+        <div className="d-flex flex-column gap-3 py-3">
             {renderMessages()}
         </div>
     );
