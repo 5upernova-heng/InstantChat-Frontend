@@ -1,6 +1,6 @@
 import {createContext, useContext, useEffect, useState} from "react";
 import PropTypes from "prop-types";
-import {listAllUsers, listFriends} from "../api/friendApi.js";
+import {getRequest, handleRequestApi, listAllUsers, listFriends} from "../api/friendApi.js";
 import {LoginContext} from "./LoginContextProvider.jsx";
 import {creatGroup, getMembers, listAllGroups, listGroups} from "../api/groupApi.js";
 import {toast} from "react-toastify";
@@ -22,6 +22,7 @@ function ChatContextProvider({children}) {
     const [allGroups, setAllGroups] = useState([]);
     const [messages, setMessages] = useState([]);
     const [chats, setChats] = useState([]);
+    const [friendRequests, setFriendRequests] = useState([]);
 
     // conversation
     // which conversation should show on the page
@@ -81,6 +82,15 @@ function ChatContextProvider({children}) {
         }
     }
 
+    // 定时任务
+    const fetchFriendRequest = async () => {
+        if (!isLogin) return;
+        const {code, data} = await getRequest(token);
+        if (code) {
+            setFriendRequests(data)
+        }
+    }
+
     useEffect(() => {
         if (isLogin) {
             loadFriends();
@@ -96,6 +106,11 @@ function ChatContextProvider({children}) {
     useEffect(() => {
         loadMessages()
     }, [conversation])
+
+    useEffect(() => {
+        fetchFriendRequest();
+        console.log("T")
+    }, [new Date()])
 
     // submit
     const [newGroup, setNewGroup] = useState(emptyGroup);
@@ -123,6 +138,18 @@ function ChatContextProvider({children}) {
         }
     }
 
+    const handleRequest = async (friendId, action) => {
+        const {code, msg} = await handleRequestApi(friendId, action, token);
+        if (code) {
+            toast("操作成功", {autoClose: 1000});
+            fetchFriendRequest();
+        } else {
+            toast(msg);
+        }
+    }
+
+
+    // utils
     const findUserById = (id) => {
         const result = allUsers.find((user) => user.id === id);
         return result;
@@ -151,10 +178,12 @@ function ChatContextProvider({children}) {
             allUsers,
             allGroups,
             messages,
+            friendRequests,
             loadMessages,
             findUserById,
             findGroupById,
             findMembersById,
+            handleRequest,
             // submit
             newGroup,
             changeSubmitGroup,
