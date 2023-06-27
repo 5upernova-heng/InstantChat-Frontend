@@ -65,7 +65,6 @@ function ChatContextProvider({children}) {
             const {code, data, msg} = await friendHistoryMessage(conversation, token);
             if (code) {
                 setMessages(data['messageList']);
-                toast(msg);
             } else {
                 toast(msg);
             }
@@ -124,18 +123,12 @@ function ChatContextProvider({children}) {
     }
 
     const findUserById = (id) => {
-        console.log(id);
-        console.log(allUsers);
         const result = allUsers.find((user) => user.id === id);
-        console.log(result);
         return result;
     }
 
     const findGroupById = (id) => {
-        console.log(id);
-        console.log(allGroups);
         const result = allGroups.find((group) => group.id === id);
-        console.log(result);
         return result;
     }
 
@@ -143,8 +136,10 @@ function ChatContextProvider({children}) {
         console.log(id);
         const {code, msg, data} = await getMembers(id, token);
         console.log(data);
-        if(code)
+        if (code)
             return data;
+        else
+            toast(msg);
     }
 
     return <ChatContext.Provider
@@ -155,6 +150,7 @@ function ChatContextProvider({children}) {
             allUsers,
             allGroups,
             messages,
+            loadMessages,
             findUserById,
             findGroupById,
             findMembersById,
