@@ -34,7 +34,21 @@ const textColorStyle = {
     "others": "text-black",
 }
 
+const groupLevelLabel = ["Tiny", "Small", "Normal", "Large", "Tremendous"];
+
+const groupLevelButtonStyle = groupLevelLabel.map((label) => {
+    return {label, style: "btn btn-sm btn-outline-secondary"};
+});
+
+const parseButtonInfo = (style, activeIndex) => {
+    return style.map((button, index) => {
+        button.isActive = index === activeIndex;
+        return button;
+    });
+};
+
 export default {
+    // avatar
     backgroundColors,
     avatarSize,
     avatarFontSize,
@@ -42,4 +56,8 @@ export default {
     roleAlignStyle,
     roleBackgroundStyle,
     textColorStyle,
+    // group
+    parseButtonInfo,
+    groupLevelLabel,
+    groupLevelButtonStyle,
 }

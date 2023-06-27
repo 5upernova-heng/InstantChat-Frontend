@@ -1,10 +1,10 @@
 import request from "./request";
 import {apiRoot} from "/src/config.json";
 
-export async function creatGroup(groupName, level, members, token) {
-    console.log("API Called: creatGroup\n", groupName, level, members);
+export async function creatGroup(groupname, level, members, token) {
+    console.log("API Called: creatGroup\n", groupname, level, members);
     const {data} = await request.post(`${apiRoot}/group/create`, {
-        groupName,
+        groupname,
         level,
         members,
     }, {
