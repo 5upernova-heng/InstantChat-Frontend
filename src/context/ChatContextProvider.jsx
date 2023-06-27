@@ -22,6 +22,13 @@ function ChatContextProvider({children}) {
     const [allGroups, setAllGroups] = useState([]);
     const [messages, setMessages] = useState([]);
 
+    // conversation
+    // which conversation should show on the page
+    // Its value equals to the id of the user/group
+    const [conversation, setConversation] = useState(-1);
+    // 0: single user; 1. group
+    const [mode, setMode] = useState(0);
+
     const loadAllUsers = async () => {
         const {code, data} = await listAllUsers(token);
         if (code === 1) setAllUsers(data);
@@ -49,6 +56,7 @@ function ChatContextProvider({children}) {
     }
 
     const loadMessages = async () => {
+        if (conversation === -1) return;
         if (mode === 0) {
             // user
             const {code, data, msg} = friendHistoryMessage(conversation, token);
@@ -76,12 +84,14 @@ function ChatContextProvider({children}) {
             loadAllUsers();
             loadAllGroups();
             changeSubmitGroup({members: [userId]});
-            // by default is the first friend;
-            setConversation(allUsers[0].id);
             setMode(0);
-            loadMessages();
+            // by default is the first friend;
         }
     }, [isLogin])
+
+    useEffect(() => {
+        loadMessages()
+    }, [conversation])
 
     // submit
     const [newGroup, setNewGroup] = useState(emptyGroup);
@@ -109,12 +119,6 @@ function ChatContextProvider({children}) {
         }
     }
 
-    // conversation
-    // which conversation should show on the page
-    // Its value equals to the id of the user/group
-    const [conversation, setConversation] = useState(0);
-    // 0: single user; 1. group
-    const [mode, setMode] = useState(0);
 
     return <ChatContext.Provider
         value={{
@@ -123,6 +127,7 @@ function ChatContextProvider({children}) {
             groups,
             allUsers,
             allGroups,
+            messages,
             // submit
             newGroup,
             changeSubmitGroup,

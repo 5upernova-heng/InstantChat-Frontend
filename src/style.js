@@ -19,9 +19,9 @@ const avatarFontSize = {
     "lg": "2.5rem",
 }
 
-const roleAlignStyle = {
-    "user": "justify-content-end",
-    "others": "justify-content-start",
+const messageAlignStyle = {
+    "user": "flex-row-reverse",
+    "others": "",
 }
 
 const roleBackgroundStyle = {
@@ -53,7 +53,7 @@ export default {
     avatarSize,
     avatarFontSize,
     // message
-    roleAlignStyle,
+    messageAlignStyle,
     roleBackgroundStyle,
     textColorStyle,
     // group
