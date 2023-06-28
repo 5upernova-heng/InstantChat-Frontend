@@ -41,7 +41,7 @@ function AddConversation({tab, setTab}) {
         let deleteCount = 0;
         filteredUsers.splice(index, 1);
         friends.map((friend) => {
-            const index = users.findIndex((user) => user.id === friend.id);
+            const index = allUsers.findIndex((user) => user.id === friend.id);
             if (index >= 0) {
                 filteredUsers.splice(index - deleteCount, 1);
                 deleteCount += 1;
