@@ -11,7 +11,6 @@ export const ChatContext = createContext(null);
 function ChatContextProvider({children}) {
     // level: from 0 to 5
     const emptyGroup = {groupname: "", level: 0, members: []};
-
     const {isLogin, loginAccount, token} = useContext(LoginContext);
     const {id: userId} = loginAccount;
 
@@ -169,14 +168,19 @@ function ChatContextProvider({children}) {
     }, [conversation])
 
     useEffect(() => {
-        if (isLogin) {
-            fetchFriendRequest();
-            loadMessages();
-            loadFriendNewMessages();
-            loadGroupNewMessages();
-        }
-
-    }, [new Date().getTime() % 3 === 0])
+        const interval = setInterval(() => {
+            if (isLogin) {
+                fetchFriendRequest();
+                loadMessages();
+                loadFriendNewMessages();
+                loadGroupNewMessages();
+                console.log("T");
+            }
+        }, 1000)
+        return () => {
+            clearInterval(interval);
+        } 
+    })
 
     // submit
     const [newGroup, setNewGroup] = useState(emptyGroup);
