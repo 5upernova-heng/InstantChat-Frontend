@@ -16,7 +16,7 @@ export async function sendMessage(friendId, message, token) {
 }
 
 export async function friendHistoryMessage(friendId, token) {
-    console.log("API Called: friendHistoryMessage\n", friendId);
+    // console.log("API Called: friendHistoryMessage\n", friendId);
     const {data} = await request.get(`${apiRoot}/friend/historymsg`, {
         params: {
             friendId
@@ -25,7 +25,7 @@ export async function friendHistoryMessage(friendId, token) {
             token: token,
         }
     });
-    console.log("Result of friendHistoryMessage: ", data);
+    // console.log("Result of friendHistoryMessage: ", data);
     return data;
 }
 
@@ -58,7 +58,7 @@ export async function groupHistoryMessage(groupId, token) {
 }
 
 export async function newFriendMessages(time, token) {
-    console.log("API Called: newFriendMessages", time);
+    // console.log("API Called: newFriendMessages", time);
     const {data} = await request.get(`${apiRoot}/friend/newMessage`, {
         params: {
             time,
@@ -67,13 +67,13 @@ export async function newFriendMessages(time, token) {
             token: token,
         }
     });
-    console.log("Result of newFriendMessages:", data);
+    // console.log("Result of newFriendMessages:", data);
     return data;
 
 }
 
 export async function newGroupMessages(time, token) {
-    console.log("API Called: newGroupMessages", time);
+    // console.log("API Called: newGroupMessages", time);
     const {data} = await request.get(`${apiRoot}/group/newMessage`, {
         params: {
             time,
@@ -82,6 +82,6 @@ export async function newGroupMessages(time, token) {
             token: token,
         }
     });
-    console.log("Result of newGroupMessages:", data);
+    // console.log("Result of newGroupMessages:", data);
     return data;
 }

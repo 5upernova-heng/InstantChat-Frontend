@@ -1,6 +1,6 @@
 import {createContext, useContext, useEffect, useState} from "react";
 import PropTypes from "prop-types";
-import {listAllUsers, listFriends,getRequest, handleRequestApi} from "../api/friendApi.js";
+import {getRequest, handleRequestApi, listAllUsers, listFriends} from "../api/friendApi.js";
 import {LoginContext} from "./LoginContextProvider.jsx";
 import {creatGroup, getMembers, listAllGroups, listGroups} from "../api/groupApi.js";
 import {toast} from "react-toastify";
@@ -24,6 +24,7 @@ function ChatContextProvider({children}) {
     const [newMessages, setNewMessages] = useState([]);
     const [chats, setChats] = useState([]);
     const [friendRequests, setFriendRequests] = useState([]);
+
     // conversation
     // which conversation should show on the page
     // Its value equals to the id of the user/group
@@ -86,11 +87,16 @@ function ChatContextProvider({children}) {
         const {code, data, msg} = await newFriendMessages(formatDate(new Date()), token);
         const newMsgTmp = [];
         const existId = [];
-        if(code) {
+        if (code) {
             data.map((friendMessage) => {
-                    if(friendMessage.id1 != conversation.id && existId.includes(friendMessage.id1) === false) {
+                    if (friendMessage.id1 !== conversation.id && existId.includes(friendMessage.id1) === false) {
                         newMsgTmp.push(
-                            {id: friendMessage.id1, messageText: friendMessage.messageText, type: 0, messageTime: friendMessage.messageTime,}
+                            {
+                                id: friendMessage.id1,
+                                messageText: friendMessage.messageText,
+                                type: 0,
+                                messageTime: friendMessage.messageTime,
+                            }
                         )
                         existId.push(friendMessage.id1);
                     }
@@ -106,11 +112,16 @@ function ChatContextProvider({children}) {
         const {code, data, msg} = await newGroupMessages(formatDate(new Date()), token);
         const newMsgTmp = newMessages;
         const existId = [];
-        if(code) {
+        if (code) {
             data.map((GroupMessage) => {
-                    if(GroupMessage.id1 != conversation.id && existId.includes(GroupMessage.id1) === false) {
+                    if (GroupMessage.id1 !== conversation.id && existId.includes(GroupMessage.id1) === false) {
                         newMsgTmp.push(
-                            {id: GroupMessage.id1, messageText: GroupMessage.messageText, type: 0, messageTime: GroupMessage.messageTime,}
+                            {
+                                id: GroupMessage.id1,
+                                messageText: GroupMessage.messageText,
+                                type: 0,
+                                messageTime: GroupMessage.messageTime,
+                            }
                         )
                         existId.push(GroupMessage.id1);
                     }
@@ -126,7 +137,7 @@ function ChatContextProvider({children}) {
         const nowMsgTmp = newMessages;
         const newMsgTmp = [];
         nowMsgTmp.map((newMsg) => {
-            if(newMsg.id != id || newMsg.type != type)
+            if (newMsg.id !== id || newMsg.type !== type)
                 newMsgTmp.push(newMsg);
         })
         setNewMessages(newMsgTmp);
@@ -158,14 +169,14 @@ function ChatContextProvider({children}) {
     }, [conversation])
 
     useEffect(() => {
-        if(isLogin) {
+        if (isLogin) {
             fetchFriendRequest();
             loadMessages();
             loadFriendNewMessages();
             loadGroupNewMessages();
         }
 
-    }, [new Date().getTime()])
+    }, [new Date().getTime() % 3 === 0])
 
     // submit
     const [newGroup, setNewGroup] = useState(emptyGroup);
@@ -217,9 +228,9 @@ function ChatContextProvider({children}) {
     }
 
     const findMembersById = async (id) => {
-        console.log(id);
+        // console.log(id);
         const {code, msg, data} = await getMembers(id, token);
-        console.log(data);
+        // console.log(data);
         if (code)
             return data;
         else
@@ -228,30 +239,23 @@ function ChatContextProvider({children}) {
 
     const padTo2Digits = (num) => {
         return num.toString().padStart(2, '0');
-      }
+    }
 
     const formatDate = (date) => {
         return (
-          [
-            date.getFullYear(),
-            padTo2Digits(date.getMonth() + 1),
-            padTo2Digits(date.getDate()),
-          ].join('-') +
-          ' ' +
-          [
-            padTo2Digits(date.getHours()),
-            padTo2Digits(date.getMinutes()),
-            padTo2Digits(date.getSeconds()),
-          ].join(':')
+            [
+                date.getFullYear(),
+                padTo2Digits(date.getMonth() + 1),
+                padTo2Digits(date.getDate()),
+            ].join('-') +
+            ' ' +
+            [
+                padTo2Digits(date.getHours()),
+                padTo2Digits(date.getMinutes()),
+                padTo2Digits(date.getSeconds()),
+            ].join(':')
         );
-      }
-
-      // 👇️ 2023-01-04 10:00:07
-      console.log(formatDate(new Date()));
-
-      //  👇️️ 2025-05-04 05:24:07
-      console.log(formatDate(new Date('May 04, 2025 05:24:07')));
-
+    }
 
     return <ChatContext.Provider
         value={{
