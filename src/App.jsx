@@ -6,6 +6,7 @@ import Login from "./pages/Login.jsx";
 import LoginContextProvider from "./context/LoginContextProvider.jsx";
 import Register from "./pages/Register.jsx";
 import ChatContextProvider from "./context/ChatContextProvider.jsx";
+import TimeContextProvider from "./context/TimeContextProvider.jsx";
 
 
 function App() {
@@ -22,11 +23,13 @@ function App() {
     }
     return (<>
         <div className="background"></div>
-        <LoginContextProvider isLogin={isLogin} setLogin={setLogin}>
-            <ChatContextProvider>
-                {renderRoutes()}
-            </ChatContextProvider>
-        </LoginContextProvider>
+        <TimeContextProvider>
+            <LoginContextProvider isLogin={isLogin} setLogin={setLogin}>
+                    <ChatContextProvider>
+                        {renderRoutes()}
+                    </ChatContextProvider>
+            </LoginContextProvider>
+        </TimeContextProvider>
     </>)
 }
 

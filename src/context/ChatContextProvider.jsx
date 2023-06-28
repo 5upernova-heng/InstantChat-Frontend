@@ -5,7 +5,7 @@ import {LoginContext} from "./LoginContextProvider.jsx";
 import {creatGroup, getMembers, listAllGroups, listGroups} from "../api/groupApi.js";
 import {toast} from "react-toastify";
 import {friendHistoryMessage, groupHistoryMessage, newFriendMessages, newGroupMessages} from "../api/messageApi.js";
-import { func } from "joi";
+import { TimeContext } from "./TimeContextProvider.jsx";
 
 export const ChatContext = createContext(null);
 // let nowSecond = new Date().getSeconds();
@@ -22,6 +22,7 @@ function ChatContextProvider({children}) {
     const emptyGroup = {groupname: "", level: 0, members: []};
 
     const {isLogin, loginAccount, token} = useContext(LoginContext);
+    const {formatDate, lastMsgTime, setLastMsgTime} = useContext(TimeContext);
     const {id: userId} = loginAccount;
 
     // data
@@ -93,14 +94,27 @@ function ChatContextProvider({children}) {
     }
 
     const loadFriendNewMessages = async () => {
-        const {code, data, msg} = await newFriendMessages(formatDate(new Date()), token);
-        const newMsgTmp = [];
+        console.log(lastMsgTime);
+        const {code, data, msg} = await newFriendMessages(lastMsgTime, token);
+        console.log(data);
+        const newMsgTmp = newMessages;
         const existId = [];
-        if(code) {
+        newMsgTmp.map((newMsg) => {
+            if(newMsg.type === 0)
+                existId.push(newMsg.id);
+        })
+        
+        if (code) {
             data.map((friendMessage) => {
-                    if(friendMessage.id1 != conversation.id && existId.includes(friendMessage.id1) === false) {
+                    if (friendMessage.id1 !== loginAccount.id && friendMessage.id1 !== conversation && existId.includes(friendMessage.id1) === false) {
                         newMsgTmp.push(
-                            {id: friendMessage.id1, messageText: friendMessage.messageText, type: 0, messageTime: friendMessage.messageTime,}
+                            {
+                                id: friendMessage.id1,
+                                messageText: friendMessage.messageText,
+                                type: 0,
+                                messageTime: friendMessage.messageTime,
+                                name: findUserById(friendMessage.id1).name,
+                            }
                         )
                         existId.push(friendMessage.id1);
                     }
@@ -113,20 +127,32 @@ function ChatContextProvider({children}) {
     }
 
     const loadGroupNewMessages = async () => {
-        const {code, data, msg} = await newGroupMessages(formatDate(new Date()), token);
+        const {code, data, msg} = await newGroupMessages(lastMsgTime, token);
+        console.log(data);
         const newMsgTmp = newMessages;
         const existId = [];
-        if(code) {
+        newMsgTmp.map((newMsg => {
+            if(newMsg.type === 1)
+                existId.push(newMsg.id);
+        }))
+        if (code) {
             data.map((GroupMessage) => {
-                    if(GroupMessage.id1 != conversation.id && existId.includes(GroupMessage.id1) === false) {
+                    if (GroupMessage.id2 !== loginAccount.id && GroupMessage.id1 !== conversation && existId.includes(GroupMessage.id1) === false) {
                         newMsgTmp.push(
-                            {id: GroupMessage.id1, messageText: GroupMessage.messageText, type: 0, messageTime: GroupMessage.messageTime,}
+                            {
+                                id: GroupMessage.id1,
+                                messageText: GroupMessage.messageText,
+                                type: 1,
+                                messageTime: GroupMessage.messageTime,
+                                name: findGroupById(GroupMessage.id1).name,
+                            }
                         )
                         existId.push(GroupMessage.id1);
                     }
                 }
             )
             setNewMessages(newMsgTmp);
+            console.log(newMsgTmp);
         } else {
             toast(msg);
         }
@@ -138,6 +164,8 @@ function ChatContextProvider({children}) {
         nowMsgTmp.map((newMsg) => {
             if(newMsg.id != id || newMsg.type != type)
                 newMsgTmp.push(newMsg);
+            else
+                setLastMsgTime(formatDate(new Date(newMsg.messageTime)));
         })
         setNewMessages(newMsgTmp);
     }
@@ -168,15 +196,20 @@ function ChatContextProvider({children}) {
     }, [conversation])
 
     useEffect(() => {
-        if(isLogin) {
-            fetchFriendRequest();
-            loadMessages();
-            loadFriendNewMessages();
-            loadGroupNewMessages();
-            console.log("T");
-        }
-        
-    }, [new Date().getTime()])
+        const interval = setInterval(() => {
+            if (isLogin) {
+                fetchFriendRequest();
+                loadMessages();
+                loadFriendNewMessages();
+                loadGroupNewMessages();
+                console.log(newMessages);
+                console.log("T");
+            }
+        }, 3000)
+        return () => {
+            clearInterval(interval);
+        } 
+    })
 
     // submit
     const [newGroup, setNewGroup] = useState(emptyGroup);
@@ -243,32 +276,7 @@ function ChatContextProvider({children}) {
             toast(msg);
     }
 
-    const padTo2Digits = (num) => {
-        return num.toString().padStart(2, '0');
-      }
-      
-    const formatDate = (date) => {
-        return (
-          [
-            date.getFullYear(),
-            padTo2Digits(date.getMonth() + 1),
-            padTo2Digits(date.getDate()),
-          ].join('-') +
-          ' ' +
-          [
-            padTo2Digits(date.getHours()),
-            padTo2Digits(date.getMinutes()),
-            padTo2Digits(date.getSeconds()),
-          ].join(':')
-        );
-      }
-      
-      // 👇️ 2023-01-04 10:00:07
-      console.log(formatDate(new Date()));
-      
-      //  👇️️ 2025-05-04 05:24:07
-      console.log(formatDate(new Date('May 04, 2025 05:24:07')));
-      
+    
 
     return <ChatContext.Provider
         value={{
@@ -298,7 +306,7 @@ function ChatContextProvider({children}) {
             chats,
             setChats,
 
-            formatDate,
+            
         }}>
         {children}
     </ChatContext.Provider>
