@@ -13,7 +13,7 @@ function RightBar() {
         mode, conversation, allUsers, findMembersById,
         setConversation, chats, setChats, setMode,
         newMessages, friendRequests, handleRequest,
-        findUserById, joinGroup, leaveGroup, getGroupSize
+        findUserById, joinGroup, leaveGroup, getGroupSize, findGroupById, deleteNewMessages,
     } = useContext(ChatContext);
 
     const [members, setMembers] = useState([]);
@@ -44,24 +44,25 @@ function RightBar() {
         }, [conversation]
     )
 
-    const jumpToChat = (user) => {
-        if (user.id === loginAccount.id)
+    const jumpToChat = (entity, type) => {
+        if (entity.id === loginAccount.id && type === 0)
             return;
 
-        setMode(0);
+        setMode(type);
         let flag = 0;
         chats.map((chat) => {
-            if (chat.id === user.id) {
+            if (chat.id === entity.id) {
                 setConversation(chat.id);
                 flag = 1;
             }
         });
         if (flag === 0) {
             const newChats = chats;
-            newChats.push({id: user.id, type: 0, name: user.name});
+            newChats.push({id: entity.id, type: type, name: entity.name});
             setChats(newChats);
-            setConversation(user.id);
+            setConversation(entity.id);
         }
+        deleteNewMessages(entity.id, type);
     };
 
     const renderFriendRequest = () => {
@@ -101,6 +102,7 @@ function RightBar() {
         );
         else return (
             <>
+                <h4 className="fw-bold text-center pt-2">新的消息</h4>
                 <div className="d-flex flex-column gap-3">
                     {newMessages.map((newMessage, index) => (
                         <div
@@ -108,10 +110,14 @@ function RightBar() {
                             style={{cursor: "pointer"}}
                             className="px-2 d-flex align-items-center"
                             onClick={() => {
-                                jumpToChat(findMembersById(newMessage.id));
+                                console.log(newMessage.id);
+                                if(newMessage.type === 0)
+                                    jumpToChat(findUserById(newMessage.id), 0);
+                                else
+                                    jumpToChat(findGroupById(newMessage.id), 1);
                             }}
                         >
-                            <UserCard name={findUserById(newMessage.id).name}/>
+                            <UserCard name={newMessage.name}/>
                         </div>
                     ))}
                 </div>
@@ -129,22 +135,22 @@ function RightBar() {
                     {members.map((user, index) => (
                         <div key={index} style={{cursor: "pointer"}}
                              className="px-2 d-flex align-items-center" onClick={() => {
-                            jumpToChat(user);
+                            jumpToChat(user, 0);
                         }}>
                             <UserCard name={user.name}/>
                         </div>
                     ))}
-                </div>
-                <h5 className="text-end pe-3 text-secondary">{`${members.length}/${getGroupSize(conversation)}`}</h5>
-                <div className="d-grid">
-                    <button className="mt-lg-5 m-2 btn btn-danger"
-                            onClick={() => {
-                                leaveGroup(conversation);
-                            }}
-                    >退出群聊
-                    </button>
-                </div>
-                <hr className="mb-0"/>
+                    </div>
+                    <h5 className="text-end pe-3 text-secondary">{`${members.length}/${getGroupSize(conversation)}`}</h5>
+                    <div className="d-grid">
+                        <button className="mt-lg-5 m-2 btn btn-danger"
+                                onClick={() => {
+                                    leaveGroup(conversation);
+                                }}
+                        >退出群聊
+                        </button>
+                    </div>
+                    <hr className="mb-0"/>
             </>
         );
     };

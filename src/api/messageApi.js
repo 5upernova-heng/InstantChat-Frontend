@@ -44,7 +44,7 @@ export async function sendGroupMessage(groupId, message, token) {
 }
 
 export async function groupHistoryMessage(groupId, token) {
-    console.log("API Called: groupHistoryMessage", groupId);
+    // console.log("API Called: groupHistoryMessage", groupId);
     const {data} = await request.get(`${apiRoot}/group/historymsg`, {
         params: {
             groupId
@@ -53,7 +53,7 @@ export async function groupHistoryMessage(groupId, token) {
             token: token,
         }
     });
-    console.log("Result of groupHistoryMessage: ", data);
+    // console.log("Result of groupHistoryMessage: ", data);
     return data;
 }
 
