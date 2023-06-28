@@ -6,7 +6,7 @@ import {ChatContext} from "../context/ChatContextProvider.jsx";
 function SideBar() {
     Modal;
 
-    const {friends, groups, setConversation, setMode, chats, setChats} = useContext(ChatContext);
+    const {friends, groups, setConversation, setMode, chats, setChats, deleteNewMessages} = useContext(ChatContext);
     
 
     useEffect(() => {
@@ -28,6 +28,7 @@ function SideBar() {
                 // always set mode before conversation
                 setMode(chat.type);
                 setConversation(chat.id);
+                deleteNewMessages(chat.id, chat.type);
             }}>
                 <Avatar name={chat.name}/>
             </div>

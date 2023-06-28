@@ -1,12 +1,21 @@
 import {createContext, useContext, useEffect, useState} from "react";
 import PropTypes from "prop-types";
-import {listAllUsers, listFriends} from "../api/friendApi.js";
+import {listAllUsers, listFriends,getRequest, handleRequestApi} from "../api/friendApi.js";
 import {LoginContext} from "./LoginContextProvider.jsx";
 import {creatGroup, getMembers, listAllGroups, listGroups} from "../api/groupApi.js";
 import {toast} from "react-toastify";
-import {friendHistoryMessage, groupHistoryMessage} from "../api/messageApi.js";
+import {friendHistoryMessage, groupHistoryMessage, newFriendMessages, newGroupMessages} from "../api/messageApi.js";
+import { func } from "joi";
 
 export const ChatContext = createContext(null);
+// let nowSecond = new Date().getSeconds();
+
+// function timeWalk(nowSecond) {
+//     nowSecond = new Date().getSeconds();
+//     console.log(nowSecond);
+// }
+
+// setInterval(timeWalk(nowSecond), 1000);
 
 function ChatContextProvider({children}) {
     // level: from 0 to 5
@@ -21,8 +30,9 @@ function ChatContextProvider({children}) {
     const [allUsers, setAllUsers] = useState([]);
     const [allGroups, setAllGroups] = useState([]);
     const [messages, setMessages] = useState([]);
+    const [newMessages, setNewMessages] = useState([]);
     const [chats, setChats] = useState([]);
-
+    const [friendRequests, setFriendRequests] = useState([]);
     // conversation
     // which conversation should show on the page
     // Its value equals to the id of the user/group
@@ -82,6 +92,65 @@ function ChatContextProvider({children}) {
         }
     }
 
+    const loadFriendNewMessages = async () => {
+        const {code, data, msg} = await newFriendMessages(formatDate(new Date()), token);
+        const newMsgTmp = [];
+        const existId = [];
+        if(code) {
+            data.map((friendMessage) => {
+                    if(friendMessage.id1 != conversation.id && existId.includes(friendMessage.id1) === false) {
+                        newMsgTmp.push(
+                            {id: friendMessage.id1, messageText: friendMessage.messageText, type: 0, messageTime: friendMessage.messageTime,}
+                        )
+                        existId.push(friendMessage.id1);
+                    }
+                }
+            )
+            setNewMessages(newMsgTmp);
+        } else {
+            toast(msg);
+        }
+    }
+
+    const loadGroupNewMessages = async () => {
+        const {code, data, msg} = await newGroupMessages(formatDate(new Date()), token);
+        const newMsgTmp = newMessages;
+        const existId = [];
+        if(code) {
+            data.map((GroupMessage) => {
+                    if(GroupMessage.id1 != conversation.id && existId.includes(GroupMessage.id1) === false) {
+                        newMsgTmp.push(
+                            {id: GroupMessage.id1, messageText: GroupMessage.messageText, type: 0, messageTime: GroupMessage.messageTime,}
+                        )
+                        existId.push(GroupMessage.id1);
+                    }
+                }
+            )
+            setNewMessages(newMsgTmp);
+        } else {
+            toast(msg);
+        }
+    }
+
+    const deleteNewMessages = (id, type) => {
+        const nowMsgTmp = newMessages;
+        const newMsgTmp = [];
+        nowMsgTmp.map((newMsg) => {
+            if(newMsg.id != id || newMsg.type != type)
+                newMsgTmp.push(newMsg);
+        })
+        setNewMessages(newMsgTmp);
+    }
+
+    // 定时任务
+    const fetchFriendRequest = async () => {
+        if (!isLogin) return;
+        const {code, data} = await getRequest(token);
+        if (code) {
+            setFriendRequests(data)
+        }
+    }
+
     useEffect(() => {
         if (isLogin) {
             loadFriends();
@@ -97,6 +166,17 @@ function ChatContextProvider({children}) {
     useEffect(() => {
         loadMessages()
     }, [conversation])
+
+    useEffect(() => {
+        if(isLogin) {
+            fetchFriendRequest();
+            loadMessages();
+            loadFriendNewMessages();
+            loadGroupNewMessages();
+            console.log("T");
+        }
+        
+    }, [new Date().getTime()])
 
     // submit
     const [newGroup, setNewGroup] = useState(emptyGroup);
@@ -124,6 +204,19 @@ function ChatContextProvider({children}) {
         }
     }
 
+    const handleRequest = async (friendId, action) => {
+        const {code, msg} = await handleRequestApi(friendId, action, token);
+        if (code) {
+            toast("操作成功", {autoClose: 1000});
+            fetchFriendRequest();
+            loadFriends();
+        } else {
+            toast(msg);
+        }
+    }
+
+
+    // utils
     const findUserById = (id) => {
         console.log(id);
         console.log(allUsers);
@@ -146,7 +239,36 @@ function ChatContextProvider({children}) {
         console.log(data);
         if(code)
             return data;
+        else
+            toast(msg);
     }
+
+    const padTo2Digits = (num) => {
+        return num.toString().padStart(2, '0');
+      }
+      
+    const formatDate = (date) => {
+        return (
+          [
+            date.getFullYear(),
+            padTo2Digits(date.getMonth() + 1),
+            padTo2Digits(date.getDate()),
+          ].join('-') +
+          ' ' +
+          [
+            padTo2Digits(date.getHours()),
+            padTo2Digits(date.getMinutes()),
+            padTo2Digits(date.getSeconds()),
+          ].join(':')
+        );
+      }
+      
+      // 👇️ 2023-01-04 10:00:07
+      console.log(formatDate(new Date()));
+      
+      //  👇️️ 2025-05-04 05:24:07
+      console.log(formatDate(new Date('May 04, 2025 05:24:07')));
+      
 
     return <ChatContext.Provider
         value={{
@@ -156,9 +278,14 @@ function ChatContextProvider({children}) {
             allUsers,
             allGroups,
             messages,
+            newMessages,
+            friendRequests,
+            loadMessages,
             findUserById,
             findGroupById,
             findMembersById,
+            handleRequest,
+            deleteNewMessages,
             // submit
             newGroup,
             changeSubmitGroup,
@@ -170,6 +297,8 @@ function ChatContextProvider({children}) {
             setConversation,
             chats,
             setChats,
+
+            formatDate,
         }}>
         {children}
     </ChatContext.Provider>

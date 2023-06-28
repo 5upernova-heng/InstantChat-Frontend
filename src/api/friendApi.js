@@ -25,6 +25,21 @@ export async function getRequest(token) {
     return data;
 }
 
+// action: 1 - accept; 2 - reject
+export async function handleRequestApi(friendId, action, token) {
+    console.log("API Called: acceptRequest", friendId, action);
+    const {data} = await request.post(`${apiRoot}/friend/accept`, {
+        friendId,
+        action,
+    }, {
+        headers: {
+            token: token,
+        }
+    });
+    console.log("Result of acceptRequest: ", data);
+    return data;
+}
+
 export async function acceptRequest(id, friendId, action, token) {
     console.log("API Called: acceptRequest\n");
     const {data} = await request.post(`${apiRoot}/friend/accept`, {
