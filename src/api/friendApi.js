@@ -15,13 +15,13 @@ export async function friendRequest(friendId, token) {
 }
 
 export async function getRequest(token) {
-    console.log("API Called: getRequest\n");
+    // console.log("API Called: getRequest\n");
     const {data} = await request.get(`${apiRoot}/friend/getRequest`, {
         headers: {
             token: token,
         }
     });
-    console.log("Result of getRequest: ", data);
+    // console.log("Result of getRequest: ", data);
     return data;
 }
 
@@ -43,7 +43,6 @@ export async function handleRequestApi(friendId, action, token) {
 export async function acceptRequest(id, friendId, action, token) {
     console.log("API Called: acceptRequest\n");
     const {data} = await request.post(`${apiRoot}/friend/accept`, {
-        id,
         friendId,
         action,
     }, {

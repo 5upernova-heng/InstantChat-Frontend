@@ -24,7 +24,7 @@ function SideBar() {
 
     const renderSideAvatars = () => {
         return chats.map((chat, index) =>
-            <div key={index} onClick={() => {
+            <div key={index} onClick={async () => {
                 // always set mode before conversation
                 setMode(chat.type);
                 setConversation(chat.id);

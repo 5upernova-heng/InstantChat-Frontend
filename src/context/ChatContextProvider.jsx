@@ -1,26 +1,18 @@
 import {createContext, useContext, useEffect, useState} from "react";
 import PropTypes from "prop-types";
-import {listAllUsers, listFriends,getRequest, handleRequestApi} from "../api/friendApi.js";
+import {getRequest, handleRequestApi, listAllUsers, listFriends} from "../api/friendApi.js";
 import {LoginContext} from "./LoginContextProvider.jsx";
-import {creatGroup, getMembers, listAllGroups, listGroups} from "../api/groupApi.js";
+import {addMember, creatGroup, getMembers, leaveGroupApi, listAllGroups, listGroups} from "../api/groupApi.js";
 import {toast} from "react-toastify";
 import {friendHistoryMessage, groupHistoryMessage, newFriendMessages, newGroupMessages} from "../api/messageApi.js";
+import STYLE from "../style.js";
 import { TimeContext } from "./TimeContextProvider.jsx";
 
 export const ChatContext = createContext(null);
-// let nowSecond = new Date().getSeconds();
-
-// function timeWalk(nowSecond) {
-//     nowSecond = new Date().getSeconds();
-//     console.log(nowSecond);
-// }
-
-// setInterval(timeWalk(nowSecond), 1000);
 
 function ChatContextProvider({children}) {
     // level: from 0 to 5
     const emptyGroup = {groupname: "", level: 0, members: []};
-
     const {isLogin, loginAccount, token} = useContext(LoginContext);
     const {formatDate, lastMsgTime, setLastMsgTime} = useContext(TimeContext);
     const {id: userId} = loginAccount;
@@ -34,6 +26,7 @@ function ChatContextProvider({children}) {
     const [newMessages, setNewMessages] = useState([]);
     const [chats, setChats] = useState([]);
     const [friendRequests, setFriendRequests] = useState([]);
+
     // conversation
     // which conversation should show on the page
     // Its value equals to the id of the user/group
@@ -77,7 +70,6 @@ function ChatContextProvider({children}) {
             const {code, data, msg} = await friendHistoryMessage(conversation, token);
             if (code) {
                 setMessages(data['messageList']);
-                toast(msg);
             } else {
                 toast(msg);
             }
@@ -162,7 +154,7 @@ function ChatContextProvider({children}) {
         const nowMsgTmp = newMessages;
         const newMsgTmp = [];
         nowMsgTmp.map((newMsg) => {
-            if(newMsg.id != id || newMsg.type != type)
+            if (newMsg.id !== id || newMsg.type !== type)
                 newMsgTmp.push(newMsg);
             else
                 setLastMsgTime(formatDate(new Date(newMsg.messageTime)));
@@ -248,6 +240,27 @@ function ChatContextProvider({children}) {
         }
     }
 
+    const joinGroup = async (groupId, members) => {
+        const {code, msg} = await addMember(groupId, members, token);
+        if (code) {
+            toast(msg);
+            loadGroups();
+            loadAllGroups();
+            return code
+        }
+    }
+
+    const leaveGroup = async (groupId) => {
+        const {code, msg} = await leaveGroupApi(groupId, token);
+        if (code) {
+            toast(msg);
+            setMode(0);
+            setConversation(-1);
+            loadGroups();
+            loadAllGroups();
+        }
+    }
+
 
     // utils
     const findUserById = (id) => {
@@ -266,11 +279,16 @@ function ChatContextProvider({children}) {
         return result;
     }
 
+    const getGroupSize = (id) => {
+        const group = findGroupById(id);
+        return STYLE.groupSize[group.level];
+    }
+
     const findMembersById = async (id) => {
-        console.log(id);
+        // console.log(id);
         const {code, msg, data} = await getMembers(id, token);
-        console.log(data);
-        if(code)
+        // console.log(data);
+        if (code)
             return data;
         else
             toast(msg);
@@ -298,6 +316,9 @@ function ChatContextProvider({children}) {
             newGroup,
             changeSubmitGroup,
             submitNewGroup,
+            joinGroup,
+            leaveGroup,
+            getGroupSize,
             // conversation
             mode,
             setMode,
