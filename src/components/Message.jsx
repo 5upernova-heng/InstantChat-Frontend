@@ -22,6 +22,7 @@ function Message({message, time, user, role}) {
                     <p className={`mb-0 ${STYLE.textColorStyle[role]}`}
                        style={{
                            whiteSpace: "pre-line",
+                           wordBreak: "break-all",
                            fontSize: "1.5rem"
                        }}>{message}</p>
                 </div>
