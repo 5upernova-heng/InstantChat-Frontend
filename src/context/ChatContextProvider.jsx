@@ -5,6 +5,7 @@ import {LoginContext} from "./LoginContextProvider.jsx";
 import {addMember, creatGroup, getMembers, leaveGroupApi, listAllGroups, listGroups} from "../api/groupApi.js";
 import {toast} from "react-toastify";
 import {friendHistoryMessage, groupHistoryMessage, newFriendMessages, newGroupMessages} from "../api/messageApi.js";
+import STYLE from "../style.js";
 
 export const ChatContext = createContext(null);
 
@@ -252,6 +253,11 @@ function ChatContextProvider({children}) {
         return result;
     }
 
+    const getGroupSize = (id) => {
+        const group = findGroupById(id);
+        return STYLE.groupSize[group.level];
+    }
+
     const findMembersById = async (id) => {
         // console.log(id);
         const {code, msg, data} = await getMembers(id, token);
@@ -304,6 +310,7 @@ function ChatContextProvider({children}) {
             submitNewGroup,
             joinGroup,
             leaveGroup,
+            getGroupSize,
             // conversation
             mode,
             setMode,

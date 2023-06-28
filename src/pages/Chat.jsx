@@ -9,6 +9,7 @@ import RightBar from "../components/RightBar.jsx";
 import Modal from "../components/Modal.jsx";
 import AddConversation from "../components/AddConversation.jsx";
 import {ChatContext} from "../context/ChatContextProvider.jsx";
+import STYLE from "../style.js";
 
 
 function Chat() {
@@ -24,6 +25,10 @@ function Chat() {
         : (mode ? findGroupById(conversation).name
                 : findUserById(conversation).name
         );
+    const label = conversation === -1
+        ? ""
+        : (mode ? `${STYLE.groupLevelLabel[findGroupById(conversation).level]} 级群聊`
+            : "私聊")
     useEffect(() => {
         if (!isLogin) {
             navigate("/login");
@@ -37,8 +42,10 @@ function Chat() {
                 <SideBar/>
                 <div className="d-flex w-100">
                     <div className="col">
-                        <div className="border-bottom d-flex align-items-center" style={{height: "3.5rem"}}>
+                        <div className="border-bottom d-flex justify-content-between align-items-center"
+                             style={{height: "3.5rem"}}>
                             <h2 className="mb-0">{`「${title}」`}</h2>
+                            <h2 className="mb-0 pe-3">{label}</h2>
                         </div>
                         <div className="overflow-auto" style={{
                             height: "calc(100vh - 20rem)",

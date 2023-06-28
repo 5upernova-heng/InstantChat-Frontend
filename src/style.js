@@ -47,6 +47,9 @@ const parseButtonInfo = (style, activeIndex) => {
     });
 };
 
+const groupSize = [10, 50, 100, 200, 500];
+
+
 export default {
     // avatar
     backgroundColors,
@@ -57,6 +60,7 @@ export default {
     roleBackgroundStyle,
     textColorStyle,
     // group
+    groupSize,
     parseButtonInfo,
     groupLevelLabel,
     groupLevelButtonStyle,

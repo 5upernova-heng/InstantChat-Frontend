@@ -13,7 +13,7 @@ function RightBar() {
         mode, conversation, allUsers, findMembersById,
         setConversation, chats, setChats, setMode,
         newMessages, friendRequests, handleRequest,
-        findUserById, joinGroup, leaveGroup
+        findUserById, joinGroup, leaveGroup, getGroupSize
     } = useContext(ChatContext);
 
     const [members, setMembers] = useState([]);
@@ -135,6 +135,7 @@ function RightBar() {
                         </div>
                     ))}
                 </div>
+                <h5 className="text-end pe-3 text-secondary">{`${members.length}/${getGroupSize(conversation)}`}</h5>
                 <div className="d-grid">
                     <button className="mt-lg-5 m-2 btn btn-danger"
                             onClick={() => {
