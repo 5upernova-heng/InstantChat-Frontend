@@ -199,7 +199,7 @@ function ChatContextProvider({children}) {
         const interval = setInterval(() => {
             if (isLogin) {
                 fetchFriendRequest();
-                loadMessages();
+                // loadMessages();
                 loadFriendNewMessages();
                 loadGroupNewMessages();
                 console.log(newMessages);
@@ -251,18 +251,18 @@ function ChatContextProvider({children}) {
 
     // utils
     const findUserById = (id) => {
-        console.log(id);
-        console.log(allUsers);
+        // console.log(id);
+        // console.log(allUsers);
         const result = allUsers.find((user) => user.id === id);
-        console.log(result);
+        // console.log(result);
         return result;
     }
 
     const findGroupById = (id) => {
-        console.log(id);
-        console.log(allGroups);
+        // console.log(id);
+        // console.log(allGroups);
         const result = allGroups.find((group) => group.id === id);
-        console.log(result);
+        // console.log(result);
         return result;
     }
 
