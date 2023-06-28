@@ -20,9 +20,14 @@ function AddConversation({tab, setTab}) {
     useEffect(() => {
         if (isLogin) {
             loadUsers(allUsers);
+        }
+    }, [isLogin, allUsers])
+
+    useEffect(() => {
+        if (isLogin) {
             loadGroups(allGroups);
         }
-    }, [isLogin, allUsers, allGroups])
+    }, [isLogin, allGroups])
 
     /*
     1. 排除自己
@@ -43,9 +48,16 @@ function AddConversation({tab, setTab}) {
 
     const loadGroups = (data) => {
         const filteredGroups = [...data];
+        let deleteCount = 0;
         addedGroups.map((addedGroup) => {
-            const index = groups.findIndex((group) => group.id === addedGroup.id);
-            filteredGroups.splice(index, 1);
+            const index = allGroups.findIndex((group) => group.id === addedGroup.id);
+            console.log("Group:", addedGroup);
+            console.log("Index:", index);
+            if (index >= 0) {
+                filteredGroups.splice(index - deleteCount, 1);
+                deleteCount += 1;
+                console.log(filteredGroups);
+            }
         })
         setGroups(filteredGroups);
     }

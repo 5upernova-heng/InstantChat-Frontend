@@ -6,7 +6,7 @@ import {addMember, creatGroup, getMembers, leaveGroupApi, listAllGroups, listGro
 import {toast} from "react-toastify";
 import {friendHistoryMessage, groupHistoryMessage, newFriendMessages, newGroupMessages} from "../api/messageApi.js";
 import STYLE from "../style.js";
-import { TimeContext } from "./TimeContextProvider.jsx";
+import {TimeContext} from "./TimeContextProvider.jsx";
 
 export const ChatContext = createContext(null);
 
@@ -92,10 +92,10 @@ function ChatContextProvider({children}) {
         const newMsgTmp = newMessages;
         const existId = [];
         newMsgTmp.map((newMsg) => {
-            if(newMsg.type === 0)
+            if (newMsg.type === 0)
                 existId.push(newMsg.id);
         })
-        
+
         if (code) {
             data.map((friendMessage) => {
                     if (friendMessage.id1 !== loginAccount.id && friendMessage.id1 !== conversation && existId.includes(friendMessage.id1) === false) {
@@ -124,7 +124,7 @@ function ChatContextProvider({children}) {
         const newMsgTmp = newMessages;
         const existId = [];
         newMsgTmp.map((newMsg => {
-            if(newMsg.type === 1)
+            if (newMsg.type === 1)
                 existId.push(newMsg.id);
         }))
         if (code) {
@@ -200,7 +200,7 @@ function ChatContextProvider({children}) {
         }, 3000)
         return () => {
             clearInterval(interval);
-        } 
+        }
     })
 
     // submit
@@ -256,8 +256,9 @@ function ChatContextProvider({children}) {
             toast(msg);
             setMode(0);
             setConversation(-1);
-            loadGroups();
-            loadAllGroups();
+            loadGroups().then(
+                () => loadAllGroups()
+            );
         }
     }
 
@@ -294,7 +295,6 @@ function ChatContextProvider({children}) {
             toast(msg);
     }
 
-    
 
     return <ChatContext.Provider
         value={{
@@ -327,7 +327,7 @@ function ChatContextProvider({children}) {
             chats,
             setChats,
 
-            
+
         }}>
         {children}
     </ChatContext.Provider>
