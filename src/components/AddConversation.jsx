@@ -31,37 +31,15 @@ function AddConversation({tab, setTab}) {
 
     const loadUsers = () => {
         // delete self
-        const filteredUsers = [...allUsers];
-        const index = filteredUsers.findIndex((user) => {
-            return user.id === loginAccount.id
-        });
-        let deleteCount = 1;
-        // delete friend
-        filteredUsers.splice(index, 1);
-        friends.map((friend) => {
-            const index = allUsers.findIndex((user) => user.id === friend.id);
-            if (index >= 0) {
-                filteredUsers.splice(index - deleteCount, 1);
-                deleteCount += 1;
-            }
-        })
+        const filteredUsers = allUsers.filter((user) => friends.findIndex(
+            (friend) => user.id === friend.id || user.id === loginAccount.id) === -1)
         setUsers(filteredUsers);
     }
 
     const loadGroups = () => {
-        const filteredGroups = [...allGroups];
-        let deleteCount = 0;
-        addedGroups.map((addedGroup) => {
-            const index = allGroups.findIndex((group) => group.id === addedGroup.id);
-            console.log("Group:", addedGroup);
-            console.log("Index:", index);
-            if (index >= 0) {
-                filteredGroups.splice(index - deleteCount, 1);
-                deleteCount += 1;
-                console.log(filteredGroups);
-            }
-        })
-        setGroups(filteredGroups);
+        const filterGroups = allGroups.filter((group) => addedGroups.findIndex(
+            (addedGroup) => addedGroup.id === group.id) === -1)
+        setGroups(filterGroups);
     }
 
     const addFriend = async (id) => {
