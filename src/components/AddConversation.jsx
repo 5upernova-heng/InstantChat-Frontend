@@ -29,16 +29,14 @@ function AddConversation({tab, setTab}) {
         }
     }, [isLogin, allGroups])
 
-    /*
-    1. 排除自己
-    2. 排除已经是好友的人
-     */
-    const loadUsers = (data) => {
-        const filteredUsers = [...data];
+    const loadUsers = () => {
+        // delete self
+        const filteredUsers = [...allUsers];
         const index = filteredUsers.findIndex((user) => {
             return user.id === loginAccount.id
         });
         let deleteCount = 0;
+        // delete friend
         filteredUsers.splice(index, 1);
         friends.map((friend) => {
             const index = allUsers.findIndex((user) => user.id === friend.id);
@@ -50,8 +48,8 @@ function AddConversation({tab, setTab}) {
         setUsers(filteredUsers);
     }
 
-    const loadGroups = (data) => {
-        const filteredGroups = [...data];
+    const loadGroups = () => {
+        const filteredGroups = [...allGroups];
         let deleteCount = 0;
         addedGroups.map((addedGroup) => {
             const index = allGroups.findIndex((group) => group.id === addedGroup.id);
