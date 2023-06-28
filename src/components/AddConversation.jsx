@@ -38,10 +38,14 @@ function AddConversation({tab, setTab}) {
         const index = filteredUsers.findIndex((user) => {
             return user.id === loginAccount.id
         });
+        let deleteCount = 0;
         filteredUsers.splice(index, 1);
         friends.map((friend) => {
             const index = users.findIndex((user) => user.id === friend.id);
-            filteredUsers.splice(index, 1);
+            if (index >= 0) {
+                filteredUsers.splice(index - deleteCount, 1);
+                deleteCount += 1;
+            }
         })
         setUsers(filteredUsers);
     }
