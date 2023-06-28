@@ -140,15 +140,17 @@ function RightBar() {
                             <UserCard name={user.name}/>
                         </div>
                     ))}
-                    <div style={{cursor: "pointer"}}
-                         className="px-2 d-flex align-items-center" onClick={() => {
-                    }}
-                         data-bs-toggle="modal"
-                         data-bs-target={"#inviteMember"}
-                    >
-                        <Avatar name="+" color="#ffffff" textColor="#000000" size={"sm"}/>
                     </div>
-                </div>
+                    <h5 className="text-end pe-3 text-secondary">{`${members.length}/${getGroupSize(conversation)}`}</h5>
+                    <div className="d-grid">
+                        <button className="mt-lg-5 m-2 btn btn-danger"
+                                onClick={() => {
+                                    leaveGroup(conversation);
+                                }}
+                        >退出群聊
+                        </button>
+                    </div>
+                    <hr className="mb-0"/>
             </>
         );
     };
