@@ -13,7 +13,7 @@ function AddConversation({tab, setTab}) {
     const [groups, setGroups] = useState([]);
 
     const {token, isLogin, loginAccount} = useContext(LoginContext);
-    const {friends, groups: addedGroups, allUsers, allGroups} = useContext(ChatContext);
+    const {friends, groups: addedGroups, joinGroup, allUsers, allGroups} = useContext(ChatContext);
 
     const tabs = ["添加好友", "添加群聊", "创建群聊"];
 
@@ -91,11 +91,15 @@ function AddConversation({tab, setTab}) {
     const renderGroup = (group, index) => (
         <div key={index} className="px-3 d-flex align-items-center">
             <UserCard name={group.name}/>
-            <button className="btn btn-sm btn-primary">
+            <button className="btn btn-sm btn-primary"
+                    onClick={() => {
+                        joinGroup(group.id, [loginAccount.id]);
+                    }}>
                 加入群聊
             </button>
         </div>
     )
+
 
     const renderMethod = [renderUser, renderGroup];
     const data = [users, groups];

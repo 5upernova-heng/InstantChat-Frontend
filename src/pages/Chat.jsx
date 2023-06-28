@@ -70,18 +70,6 @@ function Chat() {
                        </>
                    }
             />
-            <Modal id={"inviteMember"}
-                   headerLabel={"邀请好友加入群聊"}
-                   bodyComponent={
-                       <></>
-                   }
-                   footerComponent={
-                       <>
-                           <button className="btn btn-secondary" data-bs-dismiss="modal">取消
-                           </button>
-                       </>
-                   }
-            />
         </>
     )
 }

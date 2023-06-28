@@ -10,21 +10,32 @@ import Avatar from "./Avatar.jsx";
 function RightBar() {
     const {loginAccount} = useContext(LoginContext);
     const {
-        mode, conversation, findMembersById,
+        mode, conversation, allUsers, findMembersById,
         setConversation, chats, setChats, setMode,
         newMessages, friendRequests, handleRequest,
-        findUserById,
+        findUserById, joinGroup
     } = useContext(ChatContext);
 
     const [members, setMembers] = useState([]);
+    const [outsideUsers, setOutsideUsers] = useState([]);
 
     const loadMember = async () => {
         if (mode === 0) {
             setMembers([]);
+            setOutsideUsers([]);
             return;
         }
         const newMembers = await findMembersById(conversation);
         setMembers(newMembers);
+        console.log(allUsers);
+        console.log(newMembers);
+        const outside = allUsers.filter((user) => {
+            const index = newMembers.findIndex((member) => member.id === user.id);
+            console.log(index)
+            return index === -1;
+        })
+        console.log(outside);
+        setOutsideUsers(outside);
 
     }
     useEffect(
@@ -123,24 +134,38 @@ function RightBar() {
                             <UserCard name={user.name}/>
                         </div>
                     ))}
-                    <div style={{cursor: "pointer"}}
-                         className="px-2 d-flex align-items-center" onClick={() => {
-                    }}
-                         data-bs-toggle="modal"
-                         data-bs-target={"#inviteMember"}
-                    >
-                        <Avatar name="+" color="#ffffff" textColor="#000000" size={"sm"}/>
-                    </div>
                 </div>
+                <hr className="mb-0"/>
             </>
         );
     };
+
+    const renderAddMemberList = () => {
+        if (mode === 0 || outsideUsers.length === 0) return null;
+        return (
+            <>
+                <h4 className="fw-bold text-center pt-2">邀请更多人加入群聊</h4>
+                <div className="d-flex flex-column gap-3">
+                    {outsideUsers.map((user, index) => (
+                        <span key={index} style={{cursor: "pointer"}}
+                              className="px-2 d-flex align-items-center" onClick={async () => {
+                            const code = await joinGroup(conversation, [user.id]);
+                            if (code) loadMember();
+                        }}>
+                            <Avatar name={user.name} size={"sm"}/>
+                        </span>
+                    ))}
+                </div>
+            </>
+        );
+    }
 
     return (
         <div>
             {renderFriendRequest()}
             {renderNewMessages()}
             {renderMemberList()}
+            {renderAddMemberList()}
         </div>
     );
 }
