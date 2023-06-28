@@ -40,6 +40,20 @@ export async function handleRequestApi(friendId, action, token) {
     return data;
 }
 
+export async function acceptRequest(id, friendId, action, token) {
+    console.log("API Called: acceptRequest\n");
+    const {data} = await request.post(`${apiRoot}/friend/accept`, {
+        friendId,
+        action,
+    }, {
+        headers: {
+            token: token,
+        }
+    });
+    console.log("Result of acceptRequest: ", data);
+    return data;
+}
+
 export async function listFriends(token) {
     console.log("API Called: listFriends\n");
     const {data} = await request.get(`${apiRoot}/friend/list`, {
