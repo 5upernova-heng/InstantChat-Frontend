@@ -2,7 +2,7 @@ import {createContext, useContext, useEffect, useState} from "react";
 import PropTypes from "prop-types";
 import {getRequest, handleRequestApi, listAllUsers, listFriends} from "../api/friendApi.js";
 import {LoginContext} from "./LoginContextProvider.jsx";
-import {addMember, creatGroup, getMembers, listAllGroups, listGroups} from "../api/groupApi.js";
+import {addMember, creatGroup, getMembers, leaveGroupApi, listAllGroups, listGroups} from "../api/groupApi.js";
 import {toast} from "react-toastify";
 import {friendHistoryMessage, groupHistoryMessage, newFriendMessages, newGroupMessages} from "../api/messageApi.js";
 
@@ -229,6 +229,17 @@ function ChatContextProvider({children}) {
         }
     }
 
+    const leaveGroup = async (groupId) => {
+        const {code, msg} = await leaveGroupApi(groupId, token);
+        if (code) {
+            toast(msg);
+            setMode(0);
+            setConversation(-1);
+            loadGroups();
+            loadAllGroups();
+        }
+    }
+
 
     // utils
     const findUserById = (id) => {
@@ -292,6 +303,7 @@ function ChatContextProvider({children}) {
             changeSubmitGroup,
             submitNewGroup,
             joinGroup,
+            leaveGroup,
             // conversation
             mode,
             setMode,

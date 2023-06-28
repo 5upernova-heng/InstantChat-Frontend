@@ -13,7 +13,7 @@ function RightBar() {
         mode, conversation, allUsers, findMembersById,
         setConversation, chats, setChats, setMode,
         newMessages, friendRequests, handleRequest,
-        findUserById, joinGroup
+        findUserById, joinGroup, leaveGroup
     } = useContext(ChatContext);
 
     const [members, setMembers] = useState([]);
@@ -134,6 +134,14 @@ function RightBar() {
                             <UserCard name={user.name}/>
                         </div>
                     ))}
+                </div>
+                <div className="d-grid">
+                    <button className="mt-lg-5 m-2 btn btn-danger"
+                            onClick={() => {
+                                leaveGroup(conversation);
+                            }}
+                    >退出群聊
+                    </button>
                 </div>
                 <hr className="mb-0"/>
             </>

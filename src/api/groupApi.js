@@ -53,11 +53,10 @@ export async function getMembers(groupId, token) {
     return data;
 }
 
-export async function leaveGroup(groupId, id, token) {
+export async function leaveGroupApi(groupId, token) {
     console.log("API Called: leaveGroup\n", groupId);
     const {data} = await request.post(`${apiRoot}/group/leave`, {
         groupId,
-        id,
     }, {
         headers: {
             token: token,
